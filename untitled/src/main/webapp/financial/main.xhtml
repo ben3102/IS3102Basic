@@ -1,0 +1,66 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+        >
+    <ui:define name="content">
+        <h:outputLink id="loginLink" value="javascript:void(0)" onclick="dlg.show(); registerdlg.hide()" title="login">
+            <p:graphicImage value="/images/login.png" width="50" height="50"/>
+        </h:outputLink>
+
+        <h:outputLink id="registerLink" value="javascript:void(0)" onclick="registerdlg.show(); dlg.hide()" title="register">
+            <p:graphicImage value="/images/register.png" width="50" height="50"/>
+        </h:outputLink>
+
+        <h:form id="form">
+
+
+            <p:growl id="growl" showDetail="true" life="3000"/>
+
+            <p:dialog id="dialog" header="Login" widgetVar="dlg" resizable="false">
+
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="username" value="Username:"/>
+                    <p:inputText value="#{loginController.username}"
+                                 id="username" required="true" label="username"/>
+
+                    <h:outputLabel for="password" value="Password:"/>
+                    <h:inputSecret value="#{loginController.password}"
+                                   id="password" required="true" label="password"/>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="loginButton" value="Login" update="growl" ajax="false"
+                                         action="#{loginController.login}"/>
+                    </f:facet>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+        <h:form id="registerForm">
+
+
+            <p:growl id="grow2" showDetail="true" life="3000"/>
+
+            <p:dialog id="registerdialog" header="Register" widgetVar="registerdlg" resizable="false">
+
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="registerusername" value="Username:"/>
+                    <p:inputText value="#{registerController.username}"
+                                 id="registerusername" required="true" label="username"/>
+
+                    <h:outputLabel for="registerpassword" value="Password:"/>
+                    <h:inputSecret value="#{registerController.password}"
+                                   id="registerpassword" required="true" label="password"/>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="registerButton" value="Register" update="grow2"
+                                         actionListener="#{registerController.register}"/>
+                    </f:facet>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

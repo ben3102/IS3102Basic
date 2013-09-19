@@ -1,0 +1,7 @@
+#header > div:first-child
+{
+    height:100px !important;
+}
+.ui-widget {
+    font-size: 12px !important;
+}
