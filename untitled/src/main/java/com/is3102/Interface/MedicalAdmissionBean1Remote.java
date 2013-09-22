@@ -1,0 +1,29 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.is3102.Interface;
+
+import com.is3102.EntityClass.Diagnosis;
+import com.is3102.EntityClass.Medical_Anamnesis;
+import com.is3102.Exception.CaseException;
+import com.is3102.Exception.ExistException;
+import javax.ejb.Remote;
+
+/**
+ *
+ * @author Ben
+ */
+@Remote
+public interface MedicalAdmissionBean1Remote {
+  
+    public void addAnamnesis(Long caseId, Long AnamnesisId, String diseaseHistory,
+                             String socialHistory, String medicalHistory,
+                             String familyHistory, String allergies, String symptoms) throws ExistException,  CaseException;
+    public Medical_Anamnesis getAnamnesis(Long anamnesisId);
+    public void removeAnamnesis(Long anamnesisId);
+   /* public void codeDiagnosis(String diseaseCode, String description);
+    public void removeDiagnosis(Long diagnosisId);
+    public Diagnosis getDiagnosis(Long diagnosisId);*/
+    
+}
