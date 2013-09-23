@@ -169,7 +169,6 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         }
         return mCaseList;
     }
-   
     /* public void UpdatePatientInfo() throws Exception {           
      } */
 }
