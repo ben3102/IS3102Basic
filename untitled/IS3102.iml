@@ -17,6 +17,7 @@
     <orderEntry type="library" name="Maven: org.eclipse.persistence:eclipselink:2.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.persistence:javax.persistence:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: javax.faces:javax.faces-api:2.1" level="project" />
+    <orderEntry type="library" name="joda-time-2" level="project" />
   </component>
 </module>
 

@@ -7,10 +7,9 @@ package com.is3102.Interface;
 
 import com.is3102.EntityClass.Doctor;
 import com.is3102.EntityClass.Schedule;
-import com.is3102.exception.ExistException;
-import java.sql.Time;
+import com.is3102.Exception.ExistException;
+
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 

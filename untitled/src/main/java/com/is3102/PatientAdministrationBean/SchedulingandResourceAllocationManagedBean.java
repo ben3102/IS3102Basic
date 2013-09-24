@@ -5,22 +5,24 @@
 
 package com.is3102.PatientAdministrationBean;
 
-import com.is3102.EntityClass.Diagnosis;
 import com.is3102.EntityClass.Doctor;
-import com.is3102.EntityClass.ICD10_Code;
 import com.is3102.EntityClass.Schedule;
-import com.is3102.exception.ExistException;
+import com.is3102.Exception.ExistException;
 import com.is3102.Interface.SchedulingandResourceAllocationBeanRemote;
+
+import java.io.Serializable;
 import java.text.ParseException;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.ManagedBean;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 
 
-
-public class SchedulingandResourceAllocationManagedBean {
+@ManagedBean
+@SessionScoped
+public class SchedulingandResourceAllocationManagedBean implements Serializable {
 
     @EJB
     private static SchedulingandResourceAllocationBeanRemote sra;
