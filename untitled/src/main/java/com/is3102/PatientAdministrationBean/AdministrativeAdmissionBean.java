@@ -36,7 +36,7 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
     private Appointment appointment;
 
     public AdministrativeAdmissionBean() {}
-    
+
     public String addPatient(String NRIC_PIN, String name, String birthday, String address, String cNumber) throws ExistException, ParseException, Exception {
         Date bDate = HandleDates.getDateFromString(birthday);
         patient = em.find(Patient.class, NRIC_PIN);
@@ -47,7 +47,7 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         em.persist(patient);
         return patient.getNRIC_PIN();
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public long makeAppointment(String NRIC_PIN, String appDate, String place, String docId) throws ExistException, ParseException {
         Date aDate = HandleDates.getDateFromString(appDate);
@@ -83,8 +83,8 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         }
         return appointment.getId().longValue();
     }
-    
-   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public long createCase (String bedNo, String appId) throws ExistException {
         //throws ExistException {
         mCase mcase;
@@ -92,7 +92,7 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         mcase = appointment.getmCase();
         Date dateAdmitted = new Date();
         mcase.create(dateAdmitted);
-               
+
         Bed bed = em.find(Bed.class, new Long(bedNo));
         if(bed == null) { // Bed does not exist
             System.out.println("Test");
@@ -107,42 +107,61 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         em.flush();
         return mcase.getCIN().longValue();
     }
-   
-   //Get available beds
-   public List<Bed> getAvailBeds() {
-       List bedList = new ArrayList();
-       try {
-           Query qb = em.createQuery("SELECT b FROM Bed b"); 
-           Query qc = em.createQuery("SELECT m FROM mcase m");
-            
-           for (Object oc: qc.getResultList()) {
-               
-               mCase mcase = (mCase)oc;
-               //System.out.println("Bed Number: " + bed.getBedNo());
-               for (Object ob: qb.getResultList()) {
-                   Bed bed = (Bed)ob;
-                   //System.out.println("Case_Bed Number: " + mcase.getBed().getBedNo());
-                   if(mcase.getdateDischarged() != null) // bed is occupied
-                       bedList.add(mcase.getBed());
-                       //bedList.add(bed);
-                   else if(bed.getBedNo()== mcase.getBed().getBedNo())
+
+    //Get available beds
+    public List<Bed> getAvailBeds() {
+        List bedList = new ArrayList();
+        try {
+            Query qb = em.createQuery("SELECT b FROM Bed b");
+            Query qc = em.createQuery("SELECT m FROM mcase m");
+
+            for (Object oc: qc.getResultList()) {
+
+                mCase mcase = (mCase)oc;
+                //System.out.println("Bed Number: " + bed.getBedNo());
+                for (Object ob: qb.getResultList()) {
+                    Bed bed = (Bed)ob;
+                    //System.out.println("Case_Bed Number: " + mcase.getBed().getBedNo());
+                    if(mcase.getdateDischarged() != null) // bed is occupied
+                        bedList.add(mcase.getBed());
+                        //bedList.add(bed);
+                    else if(bed.getBedNo()== mcase.getBed().getBedNo())
                         continue;
-                   else bedList.add(bed);
-               }
-           }
-       }
-       catch (Exception ex){
-           ex.printStackTrace();
-       }
+                    else bedList.add(bed);
+                }
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
         return bedList;
     }
-   
-   public mCase getmCase(String CIN) {
+
+    public mCase getmCase(String CIN) {
         mCase mcase = em.find(mCase.class, CIN);
         return mcase;
-   }
-   
-   public List<mCase> getmCases() {
+    }
+
+    public Patient getPatientInfo(String NRIC_PIN) {
+
+        Patient p = em.find(Patient.class, NRIC_PIN);
+        return p;
+    }
+
+    public List<Appointment> getPatientAppointments(String NRIC_PIN){
+        Patient patient = em.find(Patient.class, NRIC_PIN);
+        List appointmentList = (List) patient.getAppointments();
+        return appointmentList;
+
+    }
+
+    public List<mCase> getPatientCases(String NRIC_PIN) {
+        Patient patient = em.find(Patient.class, NRIC_PIN);
+        List mCaseList = (List) patient.getmCases();
+        return mCaseList;
+    }
+
+    public List<mCase> getmCases() {
         Query q = em.createQuery("SELECT m FROM mCase m");
         List mCaseList = new ArrayList();
         for (Object o: q.getResultList()) {
@@ -150,12 +169,7 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
             mCaseList.add(mcase);
         }
         return mCaseList;
-        //bedNo;
-        //roomNo;
-        //floor;
-        
     }
-   
     /* public void UpdatePatientInfo() throws Exception {           
-     } */  
+     } */
 }
