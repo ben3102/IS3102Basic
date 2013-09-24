@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
+import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -26,7 +27,7 @@ import javax.persistence.Query;
 @Stateless
 public class CodingBean  implements CodingBeanRemote{
     @PersistenceContext
-    EntityManager em;
+    EntityManager em;    
 
   public List<ICD10_Code> getMatchingCodes (String description){
       

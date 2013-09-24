@@ -10,6 +10,7 @@ import com.is3102.EntityClass.mCase;
 import com.is3102.Exception.CaseException;
 import com.is3102.Interface.DischargeAndTransferBean1Remote;
 import javax.ejb.Stateful;
+import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

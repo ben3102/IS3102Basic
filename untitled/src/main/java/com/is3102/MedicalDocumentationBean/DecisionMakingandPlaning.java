@@ -13,6 +13,7 @@ import com.is3102.Exception.ExistException;
 import com.is3102.Interface.DecisionMakingandPlaningRemote;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

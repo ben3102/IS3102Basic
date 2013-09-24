@@ -22,12 +22,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import com.is3102.Interface.SchedulingandResourceAllocationBeanRemote;
+import javax.faces.bean.ManagedBean;
 /**
  *
  * @author Ashish
  */
-@Stateless
 
+@ManagedBean
 public class SchedulingandResourceAllocationBean implements SchedulingandResourceAllocationBeanRemote {
 
 

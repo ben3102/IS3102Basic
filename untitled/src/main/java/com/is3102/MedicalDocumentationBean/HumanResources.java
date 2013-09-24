@@ -7,6 +7,7 @@ package com.is3102.MedicalDocumentationBean;
 import com.is3102.Interface.HumanResourcesRemote;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.faces.bean.ManagedBean;
 
 /**
  *

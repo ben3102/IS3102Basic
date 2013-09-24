@@ -18,6 +18,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -26,7 +27,7 @@ import javax.persistence.Query;
  *
  * @author Swarit
  */
-@Stateless
+@ManagedBean
 public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemote {
 
     @PersistenceContext

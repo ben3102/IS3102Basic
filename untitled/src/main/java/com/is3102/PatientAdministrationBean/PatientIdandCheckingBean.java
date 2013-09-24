@@ -9,10 +9,11 @@ import com.is3102.EntityClass.Patient;
 import java.util.Collection;
 import com.is3102.Interface.PatientIdandCheckingRemote;
 import javax.ejb.Stateless;
+import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@Stateless
+@ManagedBean
 public class PatientIdandCheckingBean implements PatientIdandCheckingRemote {
     
     @PersistenceContext

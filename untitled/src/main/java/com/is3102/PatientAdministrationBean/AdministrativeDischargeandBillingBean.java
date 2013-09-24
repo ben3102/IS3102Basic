@@ -7,13 +7,14 @@ package com.is3102.PatientAdministrationBean;
 
 import com.is3102.Interface.AdministrativeDischargeandBillingRemote;
 import javax.ejb.Stateless;
+import javax.faces.bean.ManagedBean;
 
 /**
  *
  * @author Ashish
  */
 
-@Stateless
+@ManagedBean
 public class AdministrativeDischargeandBillingBean implements AdministrativeDischargeandBillingRemote  {
 
     // Add business logic below. (Right-click in editor and choose
