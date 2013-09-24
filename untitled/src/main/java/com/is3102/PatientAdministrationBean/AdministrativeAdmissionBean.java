@@ -166,6 +166,7 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         for (Object o: q.getResultList()) {
             mCase mcase = (mCase)o;
             mCaseList.add(mcase);
+
         }
         return mCaseList;
     }
