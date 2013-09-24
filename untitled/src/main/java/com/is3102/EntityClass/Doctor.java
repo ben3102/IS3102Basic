@@ -13,31 +13,31 @@ import java.io.Serializable;
  */
 @Entity(name="doctor")
 public class Doctor implements Serializable {
-    
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long docId;
     private String username;
     private String Name;
     private String dateOfBirth;
-    
+
     @OneToMany(cascade={CascadeType.ALL}, mappedBy="doctor")
     private Collection<Appointment> appointment = new ArrayList<Appointment>();
-    
+
     @OneToMany(mappedBy = "doctor")
     private List<Schedule> schedules;
-    
+
     @OneToMany(cascade={CascadeType.ALL})
     private List<Medical_Procedure> procedures = new ArrayList<Medical_Procedure>();
-    
 
-   public void create (Long docId, String name, String username, String dob){
-        this.docId = docId;
+
+    public void create (String name, String username, String dob){
         this.Name = name;
         this.dateOfBirth = dob;
         this.username = username;
     }
-    
-   public Long getDocId() {
+
+    public Long getDocId() {
         return docId;
     }
 
@@ -58,7 +58,7 @@ public class Doctor implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
     public Collection<Appointment> getAppointments() {
         return appointment;
     }
@@ -108,11 +108,11 @@ public class Doctor implements Serializable {
     public void setSchedules(List<Schedule> schedules) {
         this.schedules = schedules;
     }
-    
+
     public void addSchedule(Schedule schedule){
         this.schedules.add(schedule);
     }
-    
-    
-    
+
+
+
 }
