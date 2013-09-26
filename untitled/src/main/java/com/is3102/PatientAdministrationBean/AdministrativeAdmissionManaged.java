@@ -6,6 +6,7 @@ import java.io.Serializable;
 import com.is3102.EntityClass.Bed;
 import com.is3102.EntityClass.mCase;
 import com.is3102.EntityClass.Appointment;
+import com.is3102.EntityClass.Doctor;
 import com.is3102.Interface.AdministrativeAdmissionRemote;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -15,7 +16,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -44,6 +44,7 @@ public class AdministrativeAdmissionManaged implements Serializable {
     long CIN;
 
     List<Appointment> appointments = new ArrayList<Appointment>();
+    List<Bed> beds = new ArrayList<Bed>();
     
     public long getCIN(){
         return CIN;
@@ -51,6 +52,10 @@ public class AdministrativeAdmissionManaged implements Serializable {
 
     public List<Appointment> getAppointments() {
         return appointments;
+    }
+    
+    public List<Bed> getBeds() {
+        return beds;
     }
 
     public String getNRIC_PIN() {
@@ -154,7 +159,10 @@ public class AdministrativeAdmissionManaged implements Serializable {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String id = am.makeAppointment(NRIC_PIN, format.format(appDate), place, docID);
-            context.addMessage(null, new FacesMessage("Appointment " + id + " for " + NRIC_PIN + " on date " + format.format(appDate) + " by doctor " + docID +" successfully made!"));
+            
+            Doctor doctor = am.getDoctor(Long.parseLong(docID));
+            
+            context.addMessage(null, new FacesMessage("Appointment " + id + " for " + NRIC_PIN + " on date " + format.format(appDate) + " by doctor " + doctor.getName() +" successfully made!"));
         } catch(Exception ex) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Appointment could not be made!", null));
@@ -164,37 +172,28 @@ public class AdministrativeAdmissionManaged implements Serializable {
     }
 
     public void doCreateCase(ActionEvent actionEvent) {
-        System.out.println("Test1");
         FacesContext context = FacesContext.getCurrentInstance();
-        System.out.println("Test2");
         try {
             appointments  = am.getPatientAppointments(NRIC_PIN);
-            for(Appointment app: appointments) {
-                System.out.println("\nAppointment ID: " + app.getAppId() + "\nAppointment Date: " + app.getAppDate());
-            }
+            beds = am.getAvailBeds();
+            Doctor doctor = am.getDoctor(Long.parseLong(docID));
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date dateCreated = new Date();
             CIN = am.createCase(bedNo, appID);
-            context.addMessage(null, new FacesMessage("Case " + CIN + " for " + NRIC_PIN + " on date " + format.format(dateCreated) + " by doctor " + docID +" successfully created!"));
+            context.addMessage(null, new FacesMessage("Case " + CIN + " for " + NRIC_PIN + " on date " + format.format(dateCreated) + " by doctor " + doctor.getName() +" successfully created!"));
         } catch(Exception ex) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Case could not be created!", null));
         }
     }
-
-    public void doListAvailBeds() {
-        System.out.println("\n\n\t=== AVAILABLE BEDS ===");
-        List<Bed> beds = am.getAvailBeds();
-        if(beds.isEmpty()) {
-            System.out.println("No Bed Available.\n");
-            return ;
-        }
-
-        for(Bed bed: beds) {
-            System.out.println("\nBed Number: " + bed.getBedNo() + "\nRoom Number: " + bed.getRoomNo() +"\nFloor: " + bed.getFloor());
-        }
+    public void doListAvailBeds(ActionEvent actionEvent) {
+        beds = am.getAvailBeds();       
     }
-
+    
+    public void showAppointments(ActionEvent event) {
+        appointments  = am.getPatientAppointments(NRIC_PIN);
+    }
+    
     public void doListPatientCases() {
         System.out.println("\n\n\t=== CASE DETAILS ===");
         List<mCase> mcases = am.getPatientCases(getNRIC_PIN());

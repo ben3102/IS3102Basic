@@ -9,7 +9,12 @@ import com.is3102.Interface.AdministrativeAdmissionRemote;
 import com.is3102.Interface.PatientIdandCheckingRemote;
 import com.is3102.Interface.VisitorInfoServiceRemote;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 /**
  *
@@ -22,15 +27,26 @@ import javax.ejb.EJB;
 public class VisitorInfoServiceManaged implements Serializable {
 
     @EJB
-    public static AdministrativeAdmissionRemote am;
-    @EJB
-    public static PatientIdandCheckingRemote pm;
-    @EJB
-    public static VisitorInfoServiceRemote vm;
+    public VisitorInfoServiceRemote vm;
     //public AdministrativeAdmissionManaged adminadm;
 
     String NRIC_PIN;
-    String dateAdmitted;
+    Date dateAdmitted;
+    int countToday;
+    int countMonth;
+    int countAvg;
+    
+    public int getCountToday() {
+        return countToday;
+    }
+    
+     public int getCountMonth() {
+        return countMonth;
+    }
+     
+      public int getCountAvg() {
+        return countAvg;
+    }
 
     public String getNRIC_PIN() {
         return NRIC_PIN;
@@ -40,35 +56,51 @@ public class VisitorInfoServiceManaged implements Serializable {
         this.NRIC_PIN = NRIC_PIN;
     }
 
-    public String getDateAdmitted() {
+    public Date getDateAdmitted() {
         return dateAdmitted;
     }
 
-    public void setDateAdmitted(String dateAdmitted) {
+    public void setDateAdmitted(Date dateAdmitted) {
         this.dateAdmitted = dateAdmitted;
     }
-
-
-    void doretrievePatientInfo() throws ExistException {
-        NRIC_PIN = getNRIC_PIN();
-        dateAdmitted = getDateAdmitted();
-        Bed bed  = vm.retrievePatientInfo(NRIC_PIN, dateAdmitted);
-        System.out.println("\nBed Number: " + bed.getBedNo() + "\nRoom Number: " + bed.getRoomNo() +"\nFloor: " + bed.getFloor());
-
+    
+    public void doretrievePatientInfo(ActionEvent actionEvent) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Bed bed  = vm.retrievePatientInfo(NRIC_PIN, format.format(dateAdmitted));
+            context.addMessage(null, new FacesMessage("Bed Number: " + bed.getBedNo() + " ; " + " Room Number: " + bed.getRoomNo() + " ; " + " Floor Number: " + bed.getFloor()));
+    }
+        catch(Exception ex) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Patient Record could not be found!", null));
+        } finally {
+            //clear1();
+        }
     }
 
     /* Count the number of patients admitted today */
-    void dogetTodaysAdmissions() {
-        int count_today = vm.getTodaysAdmissions();
+    public void dogetTodaysAdmissions(ActionEvent actionEvent) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        countToday = vm.getTodaysAdmissions();
+        context.addMessage(null, new FacesMessage("The total is: " + countToday));
     }
 
     /* Count the number of patients admitted this month */
-    void dogetCurrentPatients() throws ParseException {
-        int count_month = vm.getCurrentPatients();
+    public void dogetCurrentPatients() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+        countMonth = vm.getCurrentPatients();
+        context.addMessage(null, new FacesMessage("The total is: " + countMonth));
+        } catch (Exception ex) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+        }
     }
 
     /* Count the average duration of stay */
-    void dogetStayDuration() {
-        int count_avg = vm.getStayDuration();
+    public void dogetStayDuration() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        countAvg = vm.getStayDuration();
+        context.addMessage(null, new FacesMessage("The total is: " + countAvg));
     }
 }

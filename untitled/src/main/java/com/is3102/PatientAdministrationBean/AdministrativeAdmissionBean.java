@@ -18,7 +18,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -35,13 +34,16 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
     private Patient patient;
     private Appointment appointment;
 
-    public AdministrativeAdmissionBean() {}
+    public AdministrativeAdmissionBean() {
+    }
 
     public String addPatient(String NRIC_PIN, String name, String birthday, String address, String cNumber) throws ExistException, ParseException, Exception {
         Date bDate = HandleDates.getDateFromString(birthday);
         patient = em.find(Patient.class, NRIC_PIN);
-        if(patient != null) // Patient Exists
-            throw new ExistException ("PATIENT ALREADY EXISTS");
+        if (patient != null) // Patient Exists
+        {
+            throw new ExistException("PATIENT ALREADY EXISTS");
+        }
         patient = new Patient();
         patient.create(NRIC_PIN, name, bDate, address, cNumber);
         em.persist(patient);
@@ -53,17 +55,15 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         Date aDate = HandleDates.getDateFromString(appDate);
         //Doctor doctor = new Doctor();
         Doctor doctor = em.find(Doctor.class, new Long(docId));
-        if(doctor == null) {
+        if (doctor == null) {
             em.clear();
             throw new ExistException("DOCTOR DOES NOT EXIST");
-        }
-        else {
-            Patient patient =  em.find(Patient.class, NRIC_PIN);
-            if(patient == null) {
+        } else {
+            Patient patient = em.find(Patient.class, NRIC_PIN);
+            if (patient == null) {
                 em.clear();
                 throw new ExistException("PATIENT DOES NOT EXIST");
-            }
-            else {
+            } else {
                 appointment = new Appointment();
                 mCase mcase = new mCase();
                 System.out.println("Test");
@@ -84,7 +84,7 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public long createCase (String bedNo, String appId) throws ExistException {
+    public long createCase(String bedNo, String appId) throws ExistException {
         //throws ExistException {
         System.out.println("Test3");
         mCase mcase;
@@ -94,49 +94,54 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         mcase.create(dateAdmitted);
 
         Bed bed = em.find(Bed.class, new Long(bedNo));
-        if(bed == null) { // Bed does not exist
+        if (bed == null) { // Bed does not exist
             em.clear();
             throw new ExistException("BED DOES NOT EXIST");
         }
-        if (mcase.getBed()==null) {
+        if (mcase.getBed() == null) {
             mcase.setBed(bed);
             appointment.setmCase(mcase);
             mcase.setPatient(appointment.getPatient());
             //em.persist(appointment);
             em.persist(mcase);
             em.flush();
-    }
-        else
-            throw new ExistException ("CASE ALREADY EXISTS");
+        } else {
+            throw new ExistException("CASE ALREADY EXISTS");
+        }
         return mcase.getCIN().longValue();
     }
 
     //Get available beds
     public List<Bed> getAvailBeds() {
         List bedList = new ArrayList();
+//        List<Bed> bedList = new ArrayList<Bed>();
         try {
             Query qb = em.createQuery("SELECT b FROM Bed b");
+            List<Bed> beds = qb.getResultList();
             Query qc = em.createQuery("SELECT m FROM mcase m");
+            List<mCase> mcases = qc.getResultList();
 
-            for (Object oc: qc.getResultList()) {
+            for (Bed bed : beds) {
+                Boolean available = true;
 
-                mCase mcase = (mCase)oc;
-                //System.out.println("Bed Number: " + bed.getBedNo());
-                for (Object ob: qb.getResultList()) {
-                    Bed bed = (Bed)ob;
-                    //System.out.println("Case_Bed Number: " + mcase.getBed().getBedNo());
-                    if(mcase.getdateDischarged() != null) // bed is occupied
-                        bedList.add(mcase.getBed());
-                        //bedList.add(bed);
-                    else if(bed.getBedNo()== mcase.getBed().getBedNo())
-                        continue;
-                    else bedList.add(bed);
+                for (mCase mc : mcases) {
+                    if (mc.getdateDischarged() == null) {
+                        if (mc.getBed() != null) {
+                            if (mc.getBed().getBedNo().equals(bed.getBedNo())) {
+                                available = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (available) {
+                    bedList.add(bed);
                 }
             }
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
+        bedList.size();
         return bedList;
     }
 
@@ -151,11 +156,10 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         return p;
     }
 
-    public List<Appointment> getPatientAppointments(String NRIC_PIN){
+    public List<Appointment> getPatientAppointments(String NRIC_PIN) {
         Patient patient = em.find(Patient.class, NRIC_PIN);
         List appointmentList = (List) patient.getAppointments();
         appointmentList.size();
-        System.out.println("Test3");
         return appointmentList;
 
     }
@@ -166,16 +170,14 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         return mCaseList;
     }
 
-    public List<mCase> getmCases() {
-        Query q = em.createQuery("SELECT m FROM mCase m");
-        List mCaseList = new ArrayList();
-        for (Object o: q.getResultList()) {
-            mCase mcase = (mCase)o;
-            mCaseList.add(mcase);
-
-        }
-        return mCaseList;
-    }
     /* public void UpdatePatientInfo() throws Exception {
      } */
+    public Doctor getDoctor(Long docId) {
+        return em.find(Doctor.class, docId);
+    }
+
+    @Override
+    public List<mCase> getmCases() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
