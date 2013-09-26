@@ -7,6 +7,7 @@ package com.is3102.Interface;
 import com.is3102.EntityClass.Bed;
 import com.is3102.EntityClass.Patient;
 import com.is3102.EntityClass.Appointment;
+import com.is3102.EntityClass.Doctor;
 import com.is3102.EntityClass.mCase;
 import javax.ejb.Remote;
 import com.is3102.Exception.ExistException;
@@ -38,4 +39,6 @@ public interface AdministrativeAdmissionRemote {
     public String makeAppointment(String NRIC_PIN, String appDate, String place, String docId) throws ExistException, ParseException;
 
     public List<Appointment> getPatientAppointments(String NRIC_PIN);
+    
+    public Doctor getDoctor(Long docId);
 }
