@@ -24,7 +24,7 @@ public class Doctor implements Serializable {
     @OneToMany(cascade={CascadeType.ALL}, mappedBy="doctor")
     private Collection<Appointment> appointment = new ArrayList<Appointment>();
 
-    @OneToMany(mappedBy = "doctor")
+    @ManyToMany(mappedBy = "doctors")
     private List<Schedule> schedules;
 
     @OneToMany(cascade={CascadeType.ALL})

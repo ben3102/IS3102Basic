@@ -7,8 +7,15 @@ import com.is3102.EntityClass.Bed;
 import com.is3102.EntityClass.mCase;
 import com.is3102.EntityClass.Appointment;
 import com.is3102.Interface.AdministrativeAdmissionRemote;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -17,24 +24,29 @@ import javax.ejb.EJB;
 
 @ManagedBean
 @SessionScoped
-//@RequestScoped
 public class AdministrativeAdmissionManaged implements Serializable {
 
     @EJB
-    public static AdministrativeAdmissionRemote am; //adminadmManager;
+    public AdministrativeAdmissionRemote am; //adminadmManager;
 
     //Input i = new Input();
 
     String NRIC_PIN;
     String name;
-    String birthday;
+    Date birthday;
     String address;
     String contact;
-    String appDate;
+    Date appDate;
     String place;
     String docID;
     String bedNo;
     String appID;
+
+    List<Appointment> appointments;
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
 
     public String getNRIC_PIN() {
         return NRIC_PIN;
@@ -52,11 +64,11 @@ public class AdministrativeAdmissionManaged implements Serializable {
         this.name = name;
     }
 
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
@@ -76,11 +88,11 @@ public class AdministrativeAdmissionManaged implements Serializable {
         this.contact = contact;
     }
 
-    public String getAppDate() {
+    public Date getAppDate() {
         return appDate;
     }
 
-    public void setAppDate(String appDate) {
+    public void setAppDate(Date appDate) {
         this.appDate = appDate;
     }
 
@@ -118,81 +130,50 @@ public class AdministrativeAdmissionManaged implements Serializable {
 
     public AdministrativeAdmissionManaged() {}
 
-    void doAddPatient() {
-        /*String NRIC_PIN;
-        String name;
-        String birthday;
-        String address;
-        String contact;*/
-
+    public void doAddPatient(ActionEvent actionEvent) {
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
-            System.out.println("\n\n\t\t== Add a Patient ==\n");
-            //NRIC_PIN = i.getString("Patient Id: ", null);
-            //name = i.getString("Patient Name: ", null);
-            //birthday = i.getString("Patient Birthday: ", null);
-            //address = i.getString("Patient Address: ", null);
-            //contact = i.getString("Patient Contact Number: ", null);
-
-            NRIC_PIN = getNRIC_PIN();
-            name = getName();
-            birthday = getBirthday();
-            address = getAddress();
-            contact = getContact();
-
-            String pin = am.addPatient(NRIC_PIN, name, birthday, address, contact);
-            System.out.println("\nPatient " + pin + " added successfully");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String pin = am.addPatient(NRIC_PIN, name, format.format(birthday), address, contact);
+            context.addMessage(null, new FacesMessage("Patient Record " + name + " with PIN " + NRIC_PIN + " successfully created!"));
         } catch(Exception ex) {
-            System.out.println(ex.getMessage());
-            System.out.println("\nERROR: Failed to add Patient");
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Patient Record could not be  created!", null));
+        } finally {
+            clear1();
         }
     }
-
-    void doMakeAppointment() {
-        /* //String NRIC_PIN;
-        String appDate;
-        String place;
-        String docID;*/
-
+  
+    public void doMakeAppointment(ActionEvent actionEvent) {
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
-            System.out.println("\n\n\t\t== Make an Appointment ==\n");
-            //NRIC_PIN = i.getString("Patient Id: ", null);
-            //appDate = i.getString("Appointment Date: ", null);
-            //place = i.getString("Appointment Place: ", null);
-            //docID = i.getString("Doctor ID: ", null);
-            NRIC_PIN = getNRIC_PIN();
-            appDate = getAppDate();
-            place = getPlace();
-            docID = getDocID();
-
-            long appID = am.makeAppointment(NRIC_PIN, appDate, place, docID);
-            System.out.println("\nAppointment " + appID + " made successfully");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String id = am.makeAppointment(NRIC_PIN, format.format(appDate), place, docID);
+            context.addMessage(null, new FacesMessage("Appointment " + id + " for " + NRIC_PIN + " on date " + appDate + " by doctor " + docID +" successfully made!"));
         } catch(Exception ex) {
-            //ex.printStackTrace();
             System.out.println(ex.getMessage());
-            System.out.println("\nERROR: Failed to make Appointment");
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Appointment could not be made!", null));
+        } finally {
+            clear2();
         }
     }
 
     void doCreateCase() {
-        //String bedNo;
-        //String appID;
-
+        FacesContext context = FacesContext.getCurrentInstance();
+        appointments = new ArrayList<Appointment>();
         try {
-            System.out.println("\n\n\t\t== Create a Case ==\n");
-            //bedNo = i.getString("Bed Number: ", null);
-            //appID = i.getString("Appointment ID: ", null);
-            NRIC_PIN = getNRIC_PIN();
-            List<Appointment> appointmens  = am.getPatientAppointments(NRIC_PIN);
-            for(Appointment app: appointmens) {
-                System.out.println("\nAppointment ID: " + app.getId() + "\nAppointment Date: " + app.getappDate());
+            appointments  = am.getPatientAppointments(NRIC_PIN);
+            for(Appointment app: appointments) {
+            System.out.println("\nAppointment ID: " + app.getAppId() + "\nAppointment Date: " + app.getAppDate());
             }
-            bedNo = getBedNo();
-            appID = getAppID();
+            //doListAvailBeds();
+            //bedNo = getBedNo();
+            //appID = getAppID();
 
             long CIN = am.createCase(bedNo, appID);
             System.out.println("\nCase " + CIN + " created successfully");
         } catch(Exception ex) {
-            System.out.println(ex.getMessage());
             System.out.println("\nERROR: Failed to create Case");
         }
     }
@@ -234,5 +215,20 @@ public class AdministrativeAdmissionManaged implements Serializable {
         for(mCase mcase: mcases) {
             System.out.println("\nPatient's Name: " + mcase.getPatient().getName() + "\nDate of Creation: " + mcase.getDateAdmitted() +"\nDate of Appointment: " + mcase.getAppointment());
         }
+    }
+    
+    public void clear1(){
+        setNRIC_PIN(null);
+        setName(null);
+        setBirthday(null);
+        setAddress(null);
+        setContact(null);
+    }
+    
+    public void clear2(){
+        setNRIC_PIN(null);
+        setAppDate(null);
+        setPlace(null);
+        setDocID(null);
     }
 }

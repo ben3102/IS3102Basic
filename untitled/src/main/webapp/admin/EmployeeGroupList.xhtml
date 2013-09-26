@@ -5,7 +5,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
-        <h:form id="form" onLoad="reset()">
+        <h:form id="form">
             <p:dataTable id="dataTable" var="employeeGroup" value="#{employeeGroupController.lazyModel}"
                          styleClass="employeeGroupDataTableStyle"
                          paginator="true" rows="10" selection="#{employeeGroupController.selectedEmployeeGroups}"
@@ -37,9 +37,9 @@
 
         <p:dialog header="EmployeeGroup Detail" widgetVar="employeeGroupDialog" resizable="false" id="employeeGroupDlg">
             <h:form id="employeeGroupDetailForm">
-                <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                <p:panelGrid id="display" columns="2" style="margin:0 auto;">
                     <h:outputText value="Group Name :"></h:outputText>
-                    <h:outputText value="#{employeeGroupController.selectedEmployeeGroup.group_name}" required="true"/>
+                    <h:outputText value="#{employeeGroupController.selectedEmployeeGroup.group_name}"/>
 
                     <f:facet name="footer">
                         <p:commandButton value="Update" update=":form:dataTable, :growl"
@@ -52,9 +52,9 @@
 
         <p:dialog header="Create New EmployeeGroup" widgetVar="newEmployeeGroupDialog" resizable="false" id="newEmployeeGroupDlg">
             <h:form id="newEmployeeGroupForm">
-                <p:panelGrid id="displayNewEmployeeGroup" columns="2" cellpadding="4" style="margin:0 auto;">
+                <p:panelGrid id="displayNewEmployeeGroup" columns="2" style="margin:0 auto;">
                     <h:outputText value="Group Name :"></h:outputText>
-                    <h:outputText value="#{employeeGroupController.selectedEmployeeGroup.group_name}" required="true"/>
+                    <h:outputText value="#{employeeGroupController.selectedEmployeeGroup.group_name}"/>
 
                     <f:facet name="footer">
                         <p:commandButton value="Submit" update=":form:dataTable, :growl"

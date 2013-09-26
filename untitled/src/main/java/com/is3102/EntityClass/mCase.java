@@ -82,7 +82,7 @@ public class mCase implements Serializable {
         return dateDischarged;
     }
 
-    public void setdateDischarged(Date dateDischarged) {
+    public void getdateDischarged(Date dateDischarged) {
         this.dateDischarged = dateDischarged;
     }
 
@@ -173,7 +173,3 @@ public class mCase implements Serializable {
         this.diagnosis=diagnosis;
     }
 }
-       
- 
-
-

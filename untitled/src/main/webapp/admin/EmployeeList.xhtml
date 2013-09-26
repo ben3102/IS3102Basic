@@ -5,7 +5,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
-        <h:form id="form" onLoad="reset()">
+        <h:form id="form">
             <p:dataTable id="dataTable" var="employee" value="#{employeeController.lazyModel}"
                          styleClass="employeeDataTableStyle"
                          paginator="true" rows="10" selection="#{employeeController.selectedEmployees}"
@@ -93,9 +93,9 @@
 
         <p:dialog header="Employee Detail" widgetVar="employeeDialog" resizable="false" id="employeeDlg">
             <h:form id="employeeDetailForm">
-                <p:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                <p:panelGrid id="display" columns="2" style="margin:0 auto;">
                     <h:outputText value="username :"></h:outputText>
-                    <h:outputText value="#{employeeController.selectedEmployee.username}" required="true"/>
+                    <h:outputText value="#{employeeController.selectedEmployee.username}"/>
 
                     <h:outputText value="First name :"></h:outputText>
                     <h:inputText value="#{employeeController.selectedEmployee.password}" required="true"
@@ -134,7 +134,7 @@
 
         <p:dialog header="Create New Employee" widgetVar="newEmployeeDialog" resizable="false" id="newEmployeeDlg">
             <h:form id="newEmployeeForm">
-                <p:panelGrid id="displayNewEmployee" columns="2" cellpadding="4" style="margin:0 auto;">
+                <p:panelGrid id="displayNewEmployee" columns="2" style="margin:0 auto;">
                     <h:outputText value="Username :"></h:outputText>
                     <p:inputText value="#{employeeController.newEmployee.username}" required="true"/>
 

@@ -27,7 +27,7 @@ import javax.persistence.Query;
  *
  * @author Swarit
  */
-@ManagedBean
+@Stateless
 public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemote {
 
     @PersistenceContext
@@ -49,9 +49,8 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public long makeAppointment(String NRIC_PIN, String appDate, String place, String docId) throws ExistException, ParseException {
+    public String makeAppointment(String NRIC_PIN, String appDate, String place, String docId) throws ExistException, ParseException {
         Date aDate = HandleDates.getDateFromString(appDate);
-        mCase mcase = new mCase();
         //Doctor doctor = new Doctor();
         Doctor doctor = em.find(Doctor.class, new Long(docId));
         if(doctor == null) {
@@ -66,11 +65,11 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
             }
             else {
                 appointment = new Appointment();
-                System.out.println("Appointment ID: " + appointment.getId());
+                mCase mcase = new mCase();
                 System.out.println("Test");
                 appointment.create(aDate, place);
                 doctor.getAppointments().add(appointment);
-                System.out.println("Appointment ID: " + appointment.getId());
+                System.out.println("Appointment ID: " + appointment.getAppId());
                 appointment.setDoctor(doctor);
                 patient.getAppointments().add(appointment);
                 appointment.setPatient(patient);
@@ -81,7 +80,7 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
                 em.flush();
             }
         }
-        return appointment.getId().longValue();
+        return (appointment.getAppId()).toString();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -171,6 +170,6 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         }
         return mCaseList;
     }
-    /* public void UpdatePatientInfo() throws Exception {           
+    /* public void UpdatePatientInfo() throws Exception {
      } */
 }

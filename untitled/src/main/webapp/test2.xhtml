@@ -1,0 +1,65 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+        >
+    <ui:define name="content">
+    <h:form id="form1">
+        <p:growl id="growl" showDetail="true" sticky="true" />
+        <p:panel>
+            <h:panelGroup>
+                <h1> Add Patient </h1>
+                <h:outputText value="Patient Name: " />
+                <p:inputText value="#{administrativeAdmissionManaged.name}" required="true" label="Patient Name"/>
+                <h:outputText value="Patient PIN: " />
+                <p:inputText value="#{administrativeAdmissionManaged.NRIC_PIN}" required="true" label="Patient PIN"/>
+                <h:outputText value="Patient Birthday (YYYY-MM-dd): " />
+                <p:calendar value="#{administrativeAdmissionManaged.birthday}" pattern="yyyy-MM-dd"/>
+                <h:outputText value="Patient Address: " />
+                <p:inputText value="#{administrativeAdmissionManaged.address}" required="true" label="Patient Address"/>
+                <h:outputText value="Patient Contact: " />
+                <p:inputText value="#{administrativeAdmissionManaged.contact}" required="true" label="Patient Contact Number"/>
+            </h:panelGroup>
+            <p:commandButton value="Submit" actionListener="#{administrativeAdmissionManaged.doAddPatient}" update=":form1:growl"/>
+            <h:outputText value="#{administrativeAdmissionManaged.NRIC_PIN}"  />
+        </p:panel>
+    </h:form>
+    <h:form id="form2">
+        <p:panel>
+            <h:panelGroup>
+                <h1> Make Appointment </h1>
+                <h:outputText value="Patient PIN: " />
+                <p:inputText value="#{administrativeAdmissionManaged.NRIC_PIN}" required="true" label="Patient PIN"/>
+                <h:outputText value="Appointment Date (YYYY-mm-dd): " />
+                <p:calendar value="#{administrativeAdmissionManaged.appDate}" pattern="yyyy-MM-dd"/>
+                <h:outputText value="Appointment Place: " />
+                <p:inputText value="#{administrativeAdmissionManaged.place}" required="true" label="Appointment Place"/>
+                <h:outputText value="Doctor ID: " />
+                <p:inputText value="#{administrativeAdmissionManaged.docID}" required="true" label="Doctor ID"/>
+            </h:panelGroup>
+            <p:commandButton value="Submit" actionListener="#{administrativeAdmissionManaged.doMakeAppointment}" update=":form1:growl"/>
+            <h:outputText value="#{administrativeAdmissionManaged.appID}"  />
+        </p:panel>
+    </h:form>
+    <h:form id="form3">
+        <p:panel>
+            <h:panelGroup>
+                <h1> Create Case </h1>
+                <h:outputText value="Patient PIN: " />
+                <p:inputText value="#{administrativeAdmissionManaged.NRIC_PIN}" required="true" label="Patient PIN"/>
+                <p:dataTable var="app" value="#{administrativeAdmissionManaged.appointments}">  
+                <p:column headerText="Appointment ID">  
+                <h:outputText value="#{app.appId}" />  
+                </p:column>  
+  
+                <p:column headerText="Appointment Date">  
+                <h:outputText value="#{app.appDate}" />  
+                </p:column>  
+                </p:dataTable> 
+                </h:panelGroup>
+         </p:panel>
+    </h:form> 
+        </ui:define>
+</ui:composition>

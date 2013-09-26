@@ -31,9 +31,6 @@ public class Patient implements Serializable {
     private String blood_group; // DO WE NEED THIS HERE????
     private String height; // DO WE NEED THIS HERE????
     private String weight; // DO WE NEED THIS HERE????
-
-
-
     
     @OneToMany(cascade={CascadeType.ALL}, mappedBy="patient")
     private Collection<Appointment> appointment = new ArrayList<Appointment>();

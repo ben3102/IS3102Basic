@@ -9,12 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
-import javax.persistence.Temporal;
-import java.sql.Time;
 import java.util.List;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 /**
  *
@@ -75,11 +71,6 @@ public class Schedule implements Serializable {
         return "EntityClass.Schedule[ id=" + id + " ]";
     }
 
-    
-
-
-
- 
     public void addDoctor(Doctor doctor){
         this.doctors.add(doctor);
     }

@@ -34,7 +34,7 @@ public class Appointment implements Serializable {
     @ManyToOne
     private Patient patient;
     
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.PERSIST})
     private mCase mcase;
     
     @ManyToOne
@@ -43,22 +43,22 @@ public class Appointment implements Serializable {
     public Appointment(){}
     
     public void create(Date appDate, String place){
-        this.setappDate(appDate);
+        this.setAppDate(appDate);
         this.setPlace(place);
     }
     
-    public Long getId() {
+    public Long getAppId() {
         return appId;
     }
 
-    public void setId(Long appId) {
+    public void setAppId(Long appId) {
         this.appId = appId;
     }
-        public Date getappDate() {
+        public Date getAppDate() {
         return appDate;
     }
 
-    public void setappDate(Date appDate) {
+    public void setAppDate(Date appDate) {
         this.appDate = appDate;
     }
     

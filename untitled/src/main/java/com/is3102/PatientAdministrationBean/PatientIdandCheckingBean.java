@@ -13,7 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@ManagedBean
+@Stateless
 public class PatientIdandCheckingBean implements PatientIdandCheckingRemote {
     
     @PersistenceContext
@@ -41,7 +41,7 @@ public class PatientIdandCheckingBean implements PatientIdandCheckingRemote {
         else {
             Collection<Appointment> appointment=patient.getAppointments(); //get all appointments for a patient
             for(Appointment appt: appointment) {
-                aDate = HandleDates.convertDateToString(appt.getappDate());
+                aDate = HandleDates.convertDateToString(appt.getAppDate());
                 if(aDate.equals(appDate))
                     return true;
             }

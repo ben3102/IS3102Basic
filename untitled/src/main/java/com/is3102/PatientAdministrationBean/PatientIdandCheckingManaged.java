@@ -7,6 +7,7 @@ import com.is3102.EntityClass.Patient;
 import com.is3102.Interface.AdministrativeAdmissionRemote;
 import com.is3102.Interface.PatientIdandCheckingRemote;
 import javax.ejb.EJB;
+import javax.faces.event.ActionEvent;
 
 /**
  *
@@ -19,13 +20,14 @@ import javax.ejb.EJB;
 public class PatientIdandCheckingManaged implements Serializable {
 
     @EJB
-    public static AdministrativeAdmissionRemote am;
+    public AdministrativeAdmissionRemote am;
     @EJB
-    public static PatientIdandCheckingRemote pm;
+    public PatientIdandCheckingRemote pm;
     public AdministrativeAdmissionManaged adminadm;
 
     String NRIC_PIN;
     String appDate;
+    private ActionEvent actionEvent;
 
     public String getNRIC_PIN() {
         return NRIC_PIN;
@@ -53,7 +55,7 @@ public class PatientIdandCheckingManaged implements Serializable {
         }
         else {
             adminadm = new AdministrativeAdmissionManaged();
-            adminadm.doAddPatient();
+            adminadm.doAddPatient(actionEvent);
         }
     }
 
@@ -66,7 +68,7 @@ public class PatientIdandCheckingManaged implements Serializable {
 
         }
         else {
-            adminadm.doMakeAppointment();
+            adminadm.doMakeAppointment(actionEvent);
         }
         adminadm = new AdministrativeAdmissionManaged();
         adminadm.doCreateCase();
