@@ -4,13 +4,9 @@
  */
 package com.is3102.EntityClass;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.List;
-import javax.persistence.ManyToMany;
 
 /**
  *
@@ -71,6 +67,11 @@ public class Schedule implements Serializable {
         return "EntityClass.Schedule[ id=" + id + " ]";
     }
 
+    
+
+
+
+ 
     public void addDoctor(Doctor doctor){
         this.doctors.add(doctor);
     }

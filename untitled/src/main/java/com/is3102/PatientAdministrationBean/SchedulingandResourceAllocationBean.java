@@ -9,26 +9,25 @@ package com.is3102.PatientAdministrationBean;
 import com.is3102.EntityClass.Doctor;
 import com.is3102.EntityClass.Schedule;
 import com.is3102.Exception.ExistException;
+import com.is3102.Interface.SchedulingandResourceAllocationBeanRemote;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import com.is3102.Interface.SchedulingandResourceAllocationBeanRemote;
-import javax.faces.bean.ManagedBean;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  *
  * @author Ashish
  */
-
-@ManagedBean
+@Stateless
 public class SchedulingandResourceAllocationBean implements SchedulingandResourceAllocationBeanRemote {
 
 
@@ -40,7 +39,7 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
     Doctor doctor;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void addDoctor(String name, String username, String dob) throws ExistException{
+    public void addDoctor(String name, String username, String dob) throws ExistException {
 
         Query q = em.createQuery("SELECT d FROM doctor d where d.Name=:name");
         q.setParameter("name", name);
@@ -54,12 +53,27 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
         System.out.println("Doctor " + name + " successfully added.");
     }
 
-    public String getDoctorName(Long id) throws ExistException{
+    public String getDoctorName(Long id) throws ExistException {
         doctor = em.find(Doctor.class, id);
         if (doctor == null)
             throw new ExistException("DOCTOR ID DOES NOT EXIST.");
 
         return doctor.getName();
+    }
+    
+    public Long getDoctorID(String name) throws ExistException{
+        Long doctorID=null;
+        Query q=em.createQuery("SELECT d.docId from doctor d where d.Name=:name");
+        q.setParameter("name", name);
+        List result;
+        result = q.getResultList();
+        if ((result.isEmpty()))
+            throw new ExistException("DOCTOR WITH NAME " +name+ " DOES NOT EXIST");
+        for (Object o: result){
+            doctorID = (Long)o;
+        }
+        return doctorID;
+        
     }
 
     public List<Doctor> getAvailableDoctors(String appointmentDate, String appointmentTime) throws ExistException, ParseException {
@@ -107,6 +121,7 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
         for (Object o: result){
             schedule = (Schedule)o;
         }
+        
         Long shiftId = schedule.getId();
         return this.getDoctors(shiftId);
 
@@ -138,7 +153,7 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
     }
 
     public List<Schedule> getShifts(Long doctorID) /*throws ExistException*/{
-        Query q = em.createQuery("SELECT s from Schedule s left join s.doctors as d where d.id = :doctorID");
+        Query q = em.createQuery("SELECT s from Schedule s left join s.doctors as d where d.docId = :doctorID");
         q.setParameter("doctorID", doctorID);
         List scheduleList = q.getResultList();
         //   List scheduleList = new ArrayList();
@@ -154,7 +169,7 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
 
     }
 
-    public void assignShift (Long doctorId, String shiftDate, String shiftCode) throws ExistException{
+    public void assignShift (Long doctorId, String shiftDate, String shiftCode) throws ExistException {
 
         Query q = em.createQuery
                 ("SELECT s FROM Schedule s WHERE s.shiftDate = :shiftDate AND s.shiftCode =:shiftCode");
@@ -200,7 +215,7 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
 
     }
 
-    public void createShift(String shiftDate, String shiftCode) throws ExistException{
+    public void createShift(String shiftDate, String shiftCode) throws ExistException {
         Query q = em.createQuery("SELECT c FROM Schedule c where c.shiftDate=:shiftDate AND c.shiftCode=:shiftCode");
         q.setParameter("shiftDate", shiftDate);
         q.setParameter("shiftCode", shiftCode);
@@ -214,7 +229,7 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
         em.persist(schedule);
     }
 
-    public List<Schedule> viewShifts() throws ExistException{
+    public List<Schedule> viewShifts() throws ExistException {
         Query q = em.createQuery("SELECT c FROM Schedule c");
         List scheduleList = new ArrayList();
         for (Object o: q.getResultList()) {

@@ -9,9 +9,9 @@ import com.is3102.EntityClass.Doctor;
 import com.is3102.EntityClass.Schedule;
 import com.is3102.Exception.ExistException;
 
+import javax.ejb.Remote;
 import java.text.ParseException;
 import java.util.List;
-import javax.ejb.Remote;
 
 /**
  *
@@ -19,6 +19,8 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface SchedulingandResourceAllocationBeanRemote {
+    
+    public Long getDoctorID(String name) throws ExistException;
 
     public void addDoctor(String name, String dob, String username) throws ExistException;
 
