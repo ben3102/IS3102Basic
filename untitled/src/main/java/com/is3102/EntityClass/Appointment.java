@@ -21,32 +21,32 @@ import javax.persistence.Temporal;
  */
 @Entity(name="Appointment")
 public class Appointment implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long appId;
-    
+
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date appDate;
-    
+
     private String place;
-    
+
     @ManyToOne
     private Patient patient;
-    
+
     @OneToOne(cascade = {CascadeType.PERSIST})
     private mCase mcase;
-    
+
     @ManyToOne
     private Doctor doctor;
-    
+
     public Appointment(){}
-    
+
     public void create(Date appDate, String place){
         this.setAppDate(appDate);
         this.setPlace(place);
     }
-    
+
     public Long getAppId() {
         return appId;
     }
@@ -54,14 +54,14 @@ public class Appointment implements Serializable {
     public void setAppId(Long appId) {
         this.appId = appId;
     }
-        public Date getAppDate() {
+    public Date getAppDate() {
         return appDate;
     }
 
     public void setAppDate(Date appDate) {
         this.appDate = appDate;
     }
-    
+
     public String getPlace() {
         return place;
     }
@@ -69,7 +69,7 @@ public class Appointment implements Serializable {
     public void setPlace(String place) {
         this.place = place;
     }
-    
+
     public Patient getPatient() {
         return patient;
     }
@@ -77,7 +77,7 @@ public class Appointment implements Serializable {
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
-    
+
     public mCase getmCase() {
         return mcase;
     }
@@ -85,7 +85,7 @@ public class Appointment implements Serializable {
     public void setmCase(mCase mcase) {
         this.mcase = mcase;
     }
-    
+
     public Doctor getDoctor() {
         return doctor;
     }

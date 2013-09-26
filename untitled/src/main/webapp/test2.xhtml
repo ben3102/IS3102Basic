@@ -49,17 +49,14 @@
                 <h1> Create Case </h1>
                 <h:outputText value="Patient PIN: " />
                 <p:inputText value="#{administrativeAdmissionManaged.NRIC_PIN}" required="true" label="Patient PIN"/>
-                <p:dataTable var="app" value="#{administrativeAdmissionManaged.appointments}">  
-                <p:column headerText="Appointment ID">  
-                <h:outputText value="#{app.appId}" />  
-                </p:column>  
-  
-                <p:column headerText="Appointment Date">  
-                <h:outputText value="#{app.appDate}" />  
-                </p:column>  
-                </p:dataTable> 
+                <h:outputText value="Bed Number: " />
+                <p:inputText value="#{administrativeAdmissionManaged.bedNo}" required="true" label="Bed Number"/>
+                <h:outputText value="Appointment ID: " />
+                <p:inputText value="#{administrativeAdmissionManaged.appID}" required="true" label="Appointment ID"/>
                 </h:panelGroup>
-         </p:panel>
+            <p:commandButton value="Submit" actionListener="#{administrativeAdmissionManaged.doCreateCase}" update=":form1:growl"/>
+            <h:outputText value="#{administrativeAdmissionManaged.CIN}"  />
+        </p:panel>
     </h:form> 
         </ui:define>
 </ui:composition>

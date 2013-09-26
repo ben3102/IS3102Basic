@@ -41,8 +41,13 @@ public class AdministrativeAdmissionManaged implements Serializable {
     String docID;
     String bedNo;
     String appID;
+    long CIN;
 
-    List<Appointment> appointments;
+    List<Appointment> appointments = new ArrayList<Appointment>();
+    
+    public long getCIN(){
+        return CIN;
+    }
 
     public List<Appointment> getAppointments() {
         return appointments;
@@ -149,9 +154,8 @@ public class AdministrativeAdmissionManaged implements Serializable {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String id = am.makeAppointment(NRIC_PIN, format.format(appDate), place, docID);
-            context.addMessage(null, new FacesMessage("Appointment " + id + " for " + NRIC_PIN + " on date " + appDate + " by doctor " + docID +" successfully made!"));
+            context.addMessage(null, new FacesMessage("Appointment " + id + " for " + NRIC_PIN + " on date " + format.format(appDate) + " by doctor " + docID +" successfully made!"));
         } catch(Exception ex) {
-            System.out.println(ex.getMessage());
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Appointment could not be made!", null));
         } finally {
@@ -159,26 +163,26 @@ public class AdministrativeAdmissionManaged implements Serializable {
         }
     }
 
-    void doCreateCase() {
+    public void doCreateCase(ActionEvent actionEvent) {
+        System.out.println("Test1");
         FacesContext context = FacesContext.getCurrentInstance();
-        appointments = new ArrayList<Appointment>();
+        System.out.println("Test2");
         try {
             appointments  = am.getPatientAppointments(NRIC_PIN);
             for(Appointment app: appointments) {
-            System.out.println("\nAppointment ID: " + app.getAppId() + "\nAppointment Date: " + app.getAppDate());
+                System.out.println("\nAppointment ID: " + app.getAppId() + "\nAppointment Date: " + app.getAppDate());
             }
-            //doListAvailBeds();
-            //bedNo = getBedNo();
-            //appID = getAppID();
-
-            long CIN = am.createCase(bedNo, appID);
-            System.out.println("\nCase " + CIN + " created successfully");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateCreated = new Date();
+            CIN = am.createCase(bedNo, appID);
+            context.addMessage(null, new FacesMessage("Case " + CIN + " for " + NRIC_PIN + " on date " + format.format(dateCreated) + " by doctor " + docID +" successfully created!"));
         } catch(Exception ex) {
-            System.out.println("\nERROR: Failed to create Case");
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Case could not be created!", null));
         }
     }
 
-    void doListAvailBeds() {
+    public void doListAvailBeds() {
         System.out.println("\n\n\t=== AVAILABLE BEDS ===");
         List<Bed> beds = am.getAvailBeds();
         if(beds.isEmpty()) {
@@ -191,7 +195,7 @@ public class AdministrativeAdmissionManaged implements Serializable {
         }
     }
 
-    void doListPatientCases() {
+    public void doListPatientCases() {
         System.out.println("\n\n\t=== CASE DETAILS ===");
         List<mCase> mcases = am.getPatientCases(getNRIC_PIN());
         if(mcases.isEmpty()) {
@@ -204,7 +208,7 @@ public class AdministrativeAdmissionManaged implements Serializable {
         }
     }
 
-    void doListCases() {
+    public void doListCases() {
         System.out.println("\n\n\t=== CASE DETAILS ===");
         List<mCase> mcases = am.getmCases();
         if(mcases.isEmpty()) {
@@ -228,7 +232,6 @@ public class AdministrativeAdmissionManaged implements Serializable {
     public void clear2(){
         setNRIC_PIN(null);
         setAppDate(null);
-        setPlace(null);
         setDocID(null);
     }
 }

@@ -71,7 +71,7 @@ public class PatientIdandCheckingManaged implements Serializable {
             adminadm.doMakeAppointment(actionEvent);
         }
         adminadm = new AdministrativeAdmissionManaged();
-        adminadm.doCreateCase();
+        adminadm.doCreateCase(actionEvent);
 
     }
 }

@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity(name="mcase")
 public class mCase implements Serializable {
-    
+
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private Long CIN;
@@ -34,7 +34,7 @@ public class mCase implements Serializable {
     private Date dateAdmitted;
     @Temporal(value = TemporalType.DATE)
     private Date dateDischarged;
-  
+
     @OneToMany(cascade={CascadeType.ALL})
     private List<Medical_Procedure> mProcedures= new ArrayList<Medical_Procedure>();
     @OneToMany(cascade={CascadeType.ALL})
@@ -46,22 +46,22 @@ public class mCase implements Serializable {
     @OneToOne
     private DischargeSummary dischargeSummary;
     @OneToOne
-    private Medical_Anamnesis medicalAnamnesis; 
+    private Medical_Anamnesis medicalAnamnesis;
     @OneToOne
-    private Nursing_Anamnesis nursingAnamnesis; 
+    private Nursing_Anamnesis nursingAnamnesis;
     @ManyToOne(cascade={CascadeType.PERSIST})
     private Bed bed;
     @ManyToOne
     private Patient patient;
     @OneToMany(cascade={CascadeType.PERSIST})
     private Collection<Diagnosis> diagnosis = new ArrayList<Diagnosis>();
-    
+
     public mCase() {}
-    
+
     public void create(Date dateAdmitted) {
         this.setDateAdmitted(dateAdmitted);
     }
-    
+
     public Long getCIN() {
         return CIN;
     }
@@ -69,7 +69,7 @@ public class mCase implements Serializable {
     public void setCIN(Long CIN) {
         this.CIN = CIN;
     }
-    
+
     public Date getDateAdmitted() {
         return dateAdmitted;
     }
@@ -77,7 +77,7 @@ public class mCase implements Serializable {
     public void setDateAdmitted(Date dateAdmitted) {
         this.dateAdmitted = dateAdmitted;
     }
-    
+
     public Date getdateDischarged() {
         return dateDischarged;
     }
@@ -94,7 +94,7 @@ public class mCase implements Serializable {
     public void setmProcedures(List<Medical_Procedure> mProcedures) {
         this.mProcedures = mProcedures;
     }
-    
+
     public Appointment getAppointment() {
         return appointment;
     }
@@ -102,7 +102,7 @@ public class mCase implements Serializable {
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
     }
-    
+
     public Patient getPatient() {
         return patient;
     }
@@ -118,11 +118,11 @@ public class mCase implements Serializable {
     public void setnProcedures(List<Nursing_Procedure> nProcedures) {
         this.nProcedures = nProcedures;
     }
-    
+
     public Bed getBed() {
         return bed;
     }
-    
+
     public void setBed(Bed bed) {
         this.bed = bed;
     }
@@ -134,10 +134,10 @@ public class mCase implements Serializable {
     public void setTransfer(Transfer transfer) {
         this.transfer = transfer;
     }
-   
+
     public void addmedicaProcedure (Medical_Procedure procedure){
         this.mProcedures.add(procedure);
-        
+
     }
 
     public DischargeSummary getDischargeSummary() {
@@ -164,7 +164,7 @@ public class mCase implements Serializable {
         this.nursingAnamnesis = nursingAnamnesis;
     }
 
-    
+
     public Collection<Diagnosis> getDiagnosis(){
         return diagnosis;
     }

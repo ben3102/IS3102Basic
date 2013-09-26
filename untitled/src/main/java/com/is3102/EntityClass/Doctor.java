@@ -112,7 +112,4 @@ public class Doctor implements Serializable {
     public void addSchedule(Schedule schedule){
         this.schedules.add(schedule);
     }
-
-
-
 }

@@ -86,6 +86,7 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public long createCase (String bedNo, String appId) throws ExistException {
         //throws ExistException {
+        System.out.println("Test3");
         mCase mcase;
         Appointment appointment = em.find(Appointment.class, new Long(appId));
         mcase = appointment.getmCase();
@@ -94,16 +95,19 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
 
         Bed bed = em.find(Bed.class, new Long(bedNo));
         if(bed == null) { // Bed does not exist
-            System.out.println("Test");
             em.clear();
             throw new ExistException("BED DOES NOT EXIST");
         }
-        mcase.setBed(bed);
-        appointment.setmCase(mcase);
-        mcase.setPatient(appointment.getPatient());
-        //em.persist(appointment);
-        em.persist(mcase);
-        em.flush();
+        if (mcase.getBed()==null) {
+            mcase.setBed(bed);
+            appointment.setmCase(mcase);
+            mcase.setPatient(appointment.getPatient());
+            //em.persist(appointment);
+            em.persist(mcase);
+            em.flush();
+    }
+        else
+            throw new ExistException ("CASE ALREADY EXISTS");
         return mcase.getCIN().longValue();
     }
 
@@ -150,6 +154,8 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
     public List<Appointment> getPatientAppointments(String NRIC_PIN){
         Patient patient = em.find(Patient.class, NRIC_PIN);
         List appointmentList = (List) patient.getAppointments();
+        appointmentList.size();
+        System.out.println("Test3");
         return appointmentList;
 
     }

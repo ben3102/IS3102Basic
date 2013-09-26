@@ -14,20 +14,20 @@ import javax.persistence.Id;
  */
 @Entity
 public class Bed implements Serializable {
-   
+
     @Id
     private Long bedNo;
     private String roomNo;
     private String floor;
-    
+
     public Bed(){}
-    
+
     public void create(Long bedNo, String roomNo, String floor){
         this.setRoomNo(roomNo);
         this.setBedNo(bedNo);
         this.setFloor(floor);
     }
-    
+
     public String getRoomNo() {
         return roomNo;
     }
@@ -43,7 +43,7 @@ public class Bed implements Serializable {
     public void setBedNo(Long bedNo) {
         this.bedNo = bedNo;
     }
-    
+
     public String getFloor() {
         return floor;
     }
