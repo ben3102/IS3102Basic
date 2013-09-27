@@ -9,6 +9,7 @@ import com.is3102.EntityClass.Medical_Anamnesis;
 import com.is3102.Exception.CaseException;
 import com.is3102.Exception.ExistException;
 import javax.ejb.Remote;
+import java.util.List;
 
 /**
  *
@@ -22,6 +23,7 @@ public interface MedicalAdmissionBean1Remote {
                              String familyHistory, String allergies, String symptoms) throws ExistException,  CaseException;
     public Medical_Anamnesis getAnamnesis(Long anamnesisId);
     public void removeAnamnesis(Long anamnesisId);
+    public List<Medical_Anamnesis> ListMedical_Anamnesis();
    /* public void codeDiagnosis(String diseaseCode, String description);
     public void removeDiagnosis(Long diagnosisId);
     public Diagnosis getDiagnosis(Long diagnosisId);*/

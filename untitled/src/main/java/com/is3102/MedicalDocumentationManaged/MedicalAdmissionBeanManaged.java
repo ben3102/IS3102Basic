@@ -6,27 +6,35 @@ package com.is3102.MedicalDocumentationManaged;
 
 import com.is3102.EntityClass.Medical_Anamnesis;
 import com.is3102.Interface.MedicalAdmissionBean1Remote;
+import com.is3102.MedicalDocumentationBean.MedicalAdmissionBean1;
+
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
- * @author Ashish
+ * @author Ben
  */
 @ManagedBean
 public class MedicalAdmissionBeanManaged {
  @EJB
- private static MedicalAdmissionBean1Remote mab;
+ private MedicalAdmissionBean1Remote mab;
  
     private Long caseId;
     private Long AnamnesisId;
     private String diseaseHistory;
-    private String socialHistory; 
+    private String socialHistory;
     private String medicalHistory;
     private String familyHistory; 
-    private String allergies; 
+    private String allergies;
     private String symptoms;
     private Medical_Anamnesis mAnamnesis;
+    //list testing
+    private List<Medical_Anamnesis> list;
+    //list testing
 
     
     
@@ -123,6 +131,14 @@ public class MedicalAdmissionBeanManaged {
         this.allergies = allergies;
     }
 
+    public MedicalAdmissionBean1Remote getMab() {
+        return mab;
+    }
+
+    public void setMab(MedicalAdmissionBean1Remote mab) {
+        this.mab = mab;
+    }
+
     public String getSymptoms() {
         return symptoms;
     }
@@ -130,5 +146,19 @@ public class MedicalAdmissionBeanManaged {
     public void setSymptoms(String symptoms) {
         this.symptoms = symptoms;
     }
-    
+
+    public void setMab(MedicalAdmissionBean1 mab) {
+        this.mab = mab;
+    }
+
+    //list testing
+    public List<Medical_Anamnesis> getList() {
+         list=mab.ListMedical_Anamnesis();
+        return list;
+    }
+    //list testing
+
+    public void setList(List<Medical_Anamnesis> list) {
+        this.list = list;
+    }
 }

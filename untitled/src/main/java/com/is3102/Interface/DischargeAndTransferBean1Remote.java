@@ -8,6 +8,7 @@ import com.is3102.EntityClass.DischargeSummary;
 import com.is3102.EntityClass.Transfer;
 import com.is3102.Exception.CaseException;
 import javax.ejb.Remote;
+import java.util.List;
 
 /**
  *
@@ -20,7 +21,9 @@ public interface DischargeAndTransferBean1Remote {
                                          String recommendation, String patientState, String medicalProcedure)throws CaseException;
     public DischargeSummary getDischargeSummary(Long dischargeId);
     public void deleteDischargeSummary(Long dischargeId);
+    public List<DischargeSummary> ListDischargeSummary();
     public void recodeTransfer(Long caseId, String referDoctor, String reason)throws CaseException;
     public Transfer getTransfer(Long transferId);
     public void deleteTransfer(Long transferId);
+    public List<Transfer> ListTransfer();
 }

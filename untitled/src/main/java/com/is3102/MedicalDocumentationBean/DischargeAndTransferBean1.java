@@ -5,6 +5,7 @@
 package com.is3102.MedicalDocumentationBean;
 
 import com.is3102.EntityClass.DischargeSummary;
+import com.is3102.EntityClass.Medical_Anamnesis;
 import com.is3102.EntityClass.Transfer;
 import com.is3102.EntityClass.mCase;
 import com.is3102.Exception.CaseException;
@@ -13,6 +14,9 @@ import javax.ejb.Stateful;
 import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -26,6 +30,11 @@ public class DischargeAndTransferBean1 implements DischargeAndTransferBean1Remot
     DischargeSummary dischargeSummary;
     Transfer transfer;
      mCase mcase;
+
+    //list testing
+    List<DischargeSummary> dischargeList;
+    List<Transfer> transferList;
+    //list testing
     
     public DischargeAndTransferBean1(){}
      
@@ -60,9 +69,27 @@ public class DischargeAndTransferBean1 implements DischargeAndTransferBean1Remot
            dischargeSummary=em.find(DischargeSummary.class, dischargeId);
            em.remove(dischargeSummary);
     }
+    //list testing
+    public List<DischargeSummary> ListDischargeSummary() {
+        dischargeList = new ArrayList<DischargeSummary>();
+        try {
+            Query q = em.createQuery("SELECT d FROM DischargeSummary d");
 
-    
-      //lack of query sentence to database?
+            for (Object ob: q.getResultList()) {
+                dischargeSummary = (DischargeSummary)ob;
+                dischargeList.add(dischargeSummary);
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return dischargeList;
+    }
+    //list testing
+
+
+
+    //lack of query sentence to database?
    @Override
     public void recodeTransfer(Long caseId, String referDoctor, String reason) throws CaseException{
         transfer=new Transfer();
@@ -82,6 +109,24 @@ public class DischargeAndTransferBean1 implements DischargeAndTransferBean1Remot
            transfer=em.find(Transfer.class,transferId);
            em.remove(transfer);
     }
+
+    //list testing
+    public List<Transfer> ListTransfer() {
+        transferList = new ArrayList<Transfer>();
+        try {
+            Query q = em.createQuery("SELECT t FROM Transfer t");
+
+            for (Object ob: q.getResultList()) {
+                transfer = (Transfer)ob;
+                transferList.add(transfer);
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return transferList;
+    }
+    //list testing
    
 
 }
