@@ -5,20 +5,22 @@
 package com.is3102.MedicalDocumentationManaged;
 
 import com.is3102.EntityClass.DischargeSummary;
+import com.is3102.EntityClass.Medical_Anamnesis;
 import com.is3102.EntityClass.Transfer;
 import com.is3102.Exception.CaseException;
 import com.is3102.Interface.DischargeAndTransferBean1Remote;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import java.util.List;
 
 /**
  *
- * @author Ashish
+ * @author Ben
  */
 @ManagedBean
-public class DischargeandTransferManaged {
+public class DischargeAndTransferManaged {
   @EJB
-  private static DischargeAndTransferBean1Remote dt;
+  private DischargeAndTransferBean1Remote dt;
   
   //case id to search case
   private Long caseId;
@@ -45,6 +47,11 @@ public class DischargeandTransferManaged {
   //
   private Long transferid;
 
+   //list testing
+  private List<DischargeSummary> list1;
+  private List<Transfer> list2;
+   //list testing
+
     
  
   public void DogenerateDischargeSummary(){
@@ -54,8 +61,46 @@ public class DischargeandTransferManaged {
           System.out.println(ex.getMessage());
       }
   }
-  
-  public void DogetDischargeSummary(){
+
+    public DischargeAndTransferBean1Remote getDt() {
+        return dt;
+    }
+
+    public void setDt(DischargeAndTransferBean1Remote dt) {
+        this.dt = dt;
+    }
+
+    public Long getTransferid() {
+        return transferid;
+    }
+
+    public void setTransferid(Long transferid) {
+        this.transferid = transferid;
+    }
+
+    //list testing
+    public List<DischargeSummary> getList1() {
+       list1= dt.ListDischargeSummary();
+        return list1;
+    }
+    //list testing
+
+    public void setList1(List<DischargeSummary> list1) {
+        this.list1 = list1;
+    }
+    //list testing
+    public List<Transfer> getList2() {
+       list2= dt.ListTransfer();
+        return list2;
+    }
+    //list testing
+
+    public void setList2(List<Transfer> list2) {
+        this.list2 = list2;
+    }
+    //list testing
+
+    public void DogetDischargeSummary(){
       try{
          this.setDischargeSummary(dt.getDischargeSummary(dischargeId));
       }catch(Exception ex){

@@ -4,6 +4,7 @@
  */
 package com.is3102.MedicalDocumentationBean;
 
+import com.is3102.EntityClass.Bed;
 import com.is3102.EntityClass.Diagnosis;
 import com.is3102.EntityClass.Medical_Anamnesis;
 import com.is3102.EntityClass.mCase;
@@ -14,6 +15,9 @@ import javax.ejb.Stateful;
 import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -25,6 +29,7 @@ public class MedicalAdmissionBean1 implements MedicalAdmissionBean1Remote {
     @PersistenceContext()
     EntityManager em;
     Medical_Anamnesis anamnesis;
+    List<Medical_Anamnesis> anamnesisList;
     Diagnosis diagnosis;
     mCase mcase;
     
@@ -58,6 +63,23 @@ public class MedicalAdmissionBean1 implements MedicalAdmissionBean1Remote {
     public Medical_Anamnesis getAnamnesis(Long anamnesisId){
         return em.find(Medical_Anamnesis.class, anamnesisId);
        }
+    //list testing
+    public List<Medical_Anamnesis> ListMedical_Anamnesis() {
+        anamnesisList = new ArrayList<Medical_Anamnesis>();
+        try {
+            Query qb = em.createQuery("SELECT m FROM Medical_Anamnesis m");
+
+                for (Object ob: qb.getResultList()) {
+                    anamnesis = (Medical_Anamnesis)ob;
+                    anamnesisList.add(anamnesis);
+                }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return anamnesisList;
+    }
+    //list testing
     
     @Override
     public void removeAnamnesis(Long anamnesisId){
