@@ -5,6 +5,7 @@
 package com.is3102.Interface;
 
 import com.is3102.EntityClass.Bed;
+import com.is3102.EntityClass.Patient;
 import com.is3102.Exception.ExistException;
 import java.text.ParseException;
 import javax.ejb.Remote;
@@ -25,4 +26,5 @@ public interface VisitorInfoServiceRemote {
 
     public int getStayDuration();
     
+    public Patient getPatient(String NRIC_PIN);
 }

@@ -9,7 +9,6 @@ import com.is3102.EntityClass.Patient;
 import com.is3102.EntityClass.mCase;
 import com.is3102.Exception.ExistException;
 import javax.ejb.Stateless;
-import com.is3102.Interface.AdministrativeAdmissionRemote;
 import com.is3102.Interface.VisitorInfoServiceRemote;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -17,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -36,15 +34,13 @@ public class VisitorInfoServiceBean implements VisitorInfoServiceRemote {
     private Patient patient;
     private mCase mcase;
 
-    public Bed retrievePatientInfo(String NRIC_PIN, String dateAdmitted) throws ExistException {
+    public Bed retrievePatientInfo(String NRIC_PIN, String dateAdmitted) {
+            //throws ExistException {
 
         String aDate;
         patient = em.find(Patient.class, NRIC_PIN);
-        // patient.getmCases();
-
+        //if(patient!=null) {
         List<mCase> mcases = (List<mCase>) patient.getmCases();
-        //List<mCase> mcases = new ArrayList<mCase>();
-
         for (mCase mcase : mcases) {
             aDate = HandleDates.convertDateToString(mcase.getDateAdmitted());
             if (aDate.equals(dateAdmitted)) {
@@ -53,7 +49,8 @@ public class VisitorInfoServiceBean implements VisitorInfoServiceRemote {
                 continue;
             }
         }
-        throw new ExistException("PATIENT NOT FOUND!");
+        return null;
+        //throw new ExistException("PATIENT NOT FOUND!");
     }
 
     /* Count the number of patients admitted today */
@@ -125,6 +122,10 @@ public class VisitorInfoServiceBean implements VisitorInfoServiceRemote {
             return 0;
         }
         //}
+    }
+
+    public Patient getPatient(String NRIC_PIN) {
+        return em.find(Patient.class, NRIC_PIN);
     }
 
     public List<mCase> getmCases() {

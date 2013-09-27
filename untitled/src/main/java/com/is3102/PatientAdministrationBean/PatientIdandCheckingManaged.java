@@ -1,11 +1,16 @@
 package com.is3102.PatientAdministrationBean;
 
+import com.is3102.EntityClass.Appointment;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 import com.is3102.EntityClass.Patient;
-import com.is3102.Interface.AdministrativeAdmissionRemote;
+import com.is3102.EntityClass.mCase;
 import com.is3102.Interface.PatientIdandCheckingRemote;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 
@@ -13,21 +18,30 @@ import javax.faces.event.ActionEvent;
  *
  * @author Swarit
  */
-
 @ManagedBean
 @SessionScoped
 //@RequestScoped
 public class PatientIdandCheckingManaged implements Serializable {
 
     @EJB
-    public AdministrativeAdmissionRemote am;
-    @EJB
     public PatientIdandCheckingRemote pm;
-    public AdministrativeAdmissionManaged adminadm;
-
     String NRIC_PIN;
-    String appDate;
-    private ActionEvent actionEvent;
+    Date appDate;
+    Patient patient;
+    List<Appointment> appointments = new ArrayList<Appointment>();
+    List<mCase> cases = new ArrayList<mCase>();
+    
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+    
+    public List<mCase> getCases() {
+        return cases;
+    }
 
     public String getNRIC_PIN() {
         return NRIC_PIN;
@@ -37,41 +51,38 @@ public class PatientIdandCheckingManaged implements Serializable {
         this.NRIC_PIN = NRIC_PIN;
     }
 
-    public String getAppDate() {
+    public Date getAppDate() {
         return appDate;
     }
 
-    public void setAppDate(String appDate) {
+    public void setAppDate(Date appDate) {
         this.appDate = appDate;
     }
 
-    void DoCheckRecurrence() {
-        NRIC_PIN = getNRIC_PIN();
+    public void DoCheckRecurrence(ActionEvent actionEvent) {
+        //FacesContext context = FacesContext.getCurrentInstance();
         if (pm.checkRecurrence(NRIC_PIN)) {
-            Patient p = am.getPatientInfo(NRIC_PIN);
-            System.out.println("\nPatient ID: " + p.getNRIC_PIN() + "\nPatient Name: " + p.getName() +"\nPatient Address: " + p.getAddress() +"\nPatient Contact Number: " + p.getcNumber());
-            DoCheckAppointment();
-
-        }
-        else {
-            adminadm = new AdministrativeAdmissionManaged();
-            adminadm.doAddPatient(actionEvent);
+            //getPatientCases(String NRIC_PIN)
+            patient = pm.getPatientInfo(NRIC_PIN);
+            //context.addMessage(null, new FacesMessage("Patient has an existing Record!"));
+            //context.addMessage(null, new FacesMessage("Patient ID: " + p.getNRIC_PIN() + "\nPatient Name: " + p.getName() + "\nPatient Address: " + p.getAddress() + "\nPatient Contact Number: " + p.getcNumber()));
+        } else {
+            patient = null;
+            //context.addMessage(null, new FacesMessage("Patient does not have an existing Record!"));
         }
     }
 
-    void DoCheckAppointment() {
-        adminadm = new AdministrativeAdmissionManaged();
-        NRIC_PIN = getNRIC_PIN();
-        appDate = getAppDate();
-        if(pm.checkAppointment(NRIC_PIN, appDate)) {
-            Patient p = am.getPatientInfo(NRIC_PIN);
-
+    public void DoCheckAppointment(ActionEvent actionEvent) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Patient patient = pm.getPatient(NRIC_PIN);
+        if (patient != null) {
+            if (pm.checkAppointment(NRIC_PIN, appDate)) {
+                appointments = pm.getPatientAppointments(NRIC_PIN, format.format(appDate));
+            } else {
+                appointments = null;
+            }
+        } else {
+            appointments = null;
         }
-        else {
-            adminadm.doMakeAppointment(actionEvent);
-        }
-        adminadm = new AdministrativeAdmissionManaged();
-        adminadm.doCreateCase(actionEvent);
-
     }
 }

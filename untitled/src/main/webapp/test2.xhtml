@@ -27,6 +27,7 @@
             </p:panel>
         </h:form>
         <h:form id="form2">
+            <p:growl id="growl" showDetail="true" sticky="true" />
             <p:panel>
                 <h:panelGroup>
                     <h1> Make Appointment </h1>
@@ -39,11 +40,12 @@
                     <h:outputText value="Doctor ID: " />
                     <p:inputText value="#{administrativeAdmissionManaged.docID}" required="true" label="Doctor ID"/>
                 </h:panelGroup>
-                <p:commandButton value="Submit" actionListener="#{administrativeAdmissionManaged.doMakeAppointment}" update=":form1:growl"/>
+                <p:commandButton value="Submit" actionListener="#{administrativeAdmissionManaged.doMakeAppointment}" update=":form2:growl"/>
                 <h:outputText value="#{administrativeAdmissionManaged.appID}"  />
             </p:panel>
         </h:form>
         <h:form id="form3">
+            <p:growl id="growl" showDetail="true" sticky="true" />
             <p:panel>
                 <h:panelGroup>
                     <h1> Create Case </h1>
@@ -54,7 +56,7 @@
                     <h:outputText value="Appointment ID: " />
                     <p:inputText value="#{administrativeAdmissionManaged.appID}" required="true" label="Appointment ID"/>
                 </h:panelGroup>
-                <p:commandButton value="Submit" actionListener="#{administrativeAdmissionManaged.doCreateCase}" update=":form1:growl"/>
+                <p:commandButton value="Submit" actionListener="#{administrativeAdmissionManaged.doCreateCase}" update=":form3:growl"/>
                 <h:outputText value="#{administrativeAdmissionManaged.CIN}"  />
             </p:panel>
         </h:form> 
@@ -100,22 +102,81 @@
                     <h:outputText value="Date of Admission (YYYY-mm-dd): " />
                     <p:calendar value="#{visitorInfoServiceManaged.dateAdmitted}" pattern="yyyy-MM-dd"/>
                 </h:panelGroup>
-                <p:commandButton value="Submit" actionListener="#{visitorInfoServiceManaged.doretrievePatientInfo}" update=":form1:growl"/>
+                <p:commandButton value="Submit" actionListener="#{visitorInfoServiceManaged.doretrievePatientInfo}" update=":form6:dataTablePatientInfo" />
+
+                <p:dataTable id="dataTablePatientInfo" var="bed" value="#{visitorInfoServiceManaged.bed}">  
+                    <p:column headerText="Bed Number">  
+                        <h:outputText value="#{bed.bedNo}" />  
+                    </p:column>  
+                    <p:column headerText="Room Number">  
+                        <h:outputText value="#{bed.roomNo}" />  
+                    </p:column>  
+                    <p:column headerText="Floor">  
+                        <h:outputText value="#{bed.floor}" />  
+                    </p:column>  
+                </p:dataTable>
             </p:panel>
         </h:form>
         <h:form id="form7">
+            <p:growl id="growl" showDetail="true" sticky="true" />
             <p:panel>
                 <h:panelGroup>
                     <h1> General Statistics </h1>
                 </h:panelGroup>
-                <p:commandButton value="Number of Patients Admitted Today" actionListener="#{visitorInfoServiceManaged.dogetTodaysAdmissions}" update=":form1:growl"/>
-                <h:outputText value="#{visitorInfoServiceManaged.countToday}" />  
-                <p:commandButton value="Number of Patients Admitted This Month" actionListener="#{visitorInfoServiceManaged.dogetCurrentPatients}" update=":form1:growl"/>
-                <h:outputText value="#{visitorInfoServiceManaged.countMonth}" />  
-                <p:commandButton value="Average Duration of Stay" actionListener="#{visitorInfoServiceManaged.dogetStayDuration}" update=":form1:growl"/>
-                <h:outputText value="#{visitorInfoServiceManaged.countAvg}" />  
+                <p:commandButton value="Number of Patients Admitted Today" actionListener="#{visitorInfoServiceManaged.dogetTodaysAdmissions}" update=":form7:growl"/> 
+                <p:commandButton value="Number of Patients Admitted This Month" actionListener="#{visitorInfoServiceManaged.dogetCurrentPatients}" update=":form7:growl"/>
+                <p:commandButton value="Average Duration of Stay" actionListener="#{visitorInfoServiceManaged.dogetStayDuration}" update=":form7:growl"/>
             </p:panel>
         </h:form>
+        <h:form id="form8">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <p:panel>
+                <h:panelGroup>
+                    <h1> Check for Past Records </h1>
+                </h:panelGroup>
+                <h:outputText value="Patient PIN: " />
+                <p:inputText value="#{patientIdandCheckingManaged.NRIC_PIN}" required="true" label="Patient PIN"/>
+                <p:commandButton value="Check for Existing Record" actionListener="#{patientIdandCheckingManaged.DoCheckRecurrence}" update=":form8:dataTablePatientRecord"/>
 
+                <p:dataTable id="dataTablePatientRecord" var="patient" value="#{patientIdandCheckingManaged.patient}">  
+                    <p:column headerText="Patient Name">  
+                        <h:outputText value="#{patient.name}" />  
+                    </p:column>  
+                    <p:column headerText="Patient PIN">  
+                        <h:outputText value="#{patient.NRIC_PIN}" />  
+                    </p:column>
+                    <p:column headerText="Patient Birthday">  
+                        <h:outputText value="#{patient.birthday}" />  
+                    </p:column>
+                    <p:column headerText="Patient Address">  
+                        <h:outputText value="#{patient.address}" />  
+                    </p:column>
+                    <p:column headerText="Patient Contact Number">  
+                        <h:outputText value="#{patient.cNumber}" />  
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+        <h:form id="form9">
+            <p:panel>
+                <h:panelGroup>
+                    <h1> Check for Past Appointments </h1>
+                </h:panelGroup>
+                <h:outputText value="Patient PIN: " />
+                <p:inputText value="#{patientIdandCheckingManaged.NRIC_PIN}" required="true" label="Patient PIN"/>
+                <h:outputText value="Appointment Date (YYYY-mm-dd): " />
+                <p:calendar value="#{patientIdandCheckingManaged.appDate}" pattern="yyyy-MM-dd"/>
+                <p:commandButton value="Check for Existing Appointment" actionListener="#{patientIdandCheckingManaged.DoCheckAppointment}" update=":form9:dataTableAppointments" />
+
+                <p:dataTable id="dataTableAppointments" var="app" value="#{patientIdandCheckingManaged.appointments}">  
+                    <p:column headerText="Appointment ID">  
+                        <h:outputText value="#{app.appId}" />  
+                    </p:column>  
+                    <p:column headerText="Appointment Date">  
+                        <h:outputText value="#{app.appDate}" />  
+                    </p:column>  
+                </p:dataTable>
+            </p:panel>
+        </h:form>
     </ui:define>
 </ui:composition>

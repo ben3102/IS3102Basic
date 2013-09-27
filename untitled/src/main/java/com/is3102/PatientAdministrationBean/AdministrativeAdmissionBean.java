@@ -150,12 +150,6 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
         return mcase;
     }
 
-    public Patient getPatientInfo(String NRIC_PIN) {
-
-        Patient p = em.find(Patient.class, NRIC_PIN);
-        return p;
-    }
-
     public List<Appointment> getPatientAppointments(String NRIC_PIN) {
         Patient patient = em.find(Patient.class, NRIC_PIN);
         List appointmentList = (List) patient.getAppointments();
@@ -164,20 +158,14 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
 
     }
 
-    public List<mCase> getPatientCases(String NRIC_PIN) {
-        Patient patient = em.find(Patient.class, NRIC_PIN);
-        List mCaseList = (List) patient.getmCases();
-        return mCaseList;
-    }
-
     /* public void UpdatePatientInfo() throws Exception {
      } */
+    
     public Doctor getDoctor(Long docId) {
         return em.find(Doctor.class, docId);
     }
 
-    @Override
-    public List<mCase> getmCases() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Patient getPatient(String NRIC_PIN) {
+        return em.find(Patient.class, NRIC_PIN);
     }
 }
