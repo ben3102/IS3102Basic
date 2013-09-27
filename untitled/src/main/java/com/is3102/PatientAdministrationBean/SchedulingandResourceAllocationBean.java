@@ -136,6 +136,9 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
             Doctor doc = (Doctor)o;
             docList.add(doc);
         }
+        
+        
+                      
         if (docList.isEmpty()==true){
             throw new ExistException("THERE ARE NO DOCTORS IN THE DATABASE");
         }
