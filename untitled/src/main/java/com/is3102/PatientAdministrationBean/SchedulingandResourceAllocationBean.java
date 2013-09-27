@@ -131,14 +131,15 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
     public List<Doctor> getDoctors() throws ExistException {
 
         Query q = em.createQuery("SELECT c FROM doctor c");
-        List docList = new ArrayList();
+       /* List docList = new ArrayList();
         for (Object o: q.getResultList()) {
             Doctor doc = (Doctor)o;
             docList.add(doc);
-        }
+        }*/
         
+        List docList = (List)q.getResultList();
+        docList.size();
         
-                      
         if (docList.isEmpty()==true){
             throw new ExistException("THERE ARE NO DOCTORS IN THE DATABASE");
         }
