@@ -12,13 +12,13 @@
         <p:panel>
             <h:panelGroup >
                 <h1> Create Shift</h1>
-                <h:outputText value="Shift Date: (dd-MM-YYYY)" />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.shiftDate}" required="true" label="Shift Date" />
+                <h:outputText value="Shift Date: (YYYY-MM-dd)" />
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.shiftDate}" required="true" label="Shift Date" />
                 <h:outputText value="Shift Code: " />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.shiftCode}" required="true" label="Shift Code"/>
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.shiftCode}" required="true" label="Shift Code"/>
             </h:panelGroup>
-            <p:commandButton value="Submit" actionListener="#{schedulingAndResourceAllocationManagedBean.doCreateShift}" update=":form1:growl"/>
-            <h:outputText value="#{schedulingAndResourceAllocationManagedBean.shiftDate}"  />
+            <p:commandButton value="Submit" actionListener="#{schedulingAndResourceAllocationManaged.doCreateShift}" update=":form1:growl"/>
+            <h:outputText value="#{schedulingAndResourceAllocationManaged.shiftDate}"  />
         </p:panel>
         
     </h:form>
@@ -29,15 +29,15 @@
         <p:panel>
             <h:panelGroup >
                 <h1> Assign Shift</h1>
-                <h:outputText value="Shift Date: (dd-MM-YYYY)" />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.shiftDate}" required="true" label="Shift Date"/>
+                <h:outputText value="Shift Date: (YYYY-MM-dd)" />
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.shiftDate}" required="true" label="Shift Date"/>
                 <h:outputText value="Shift Code: " />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.shiftCode}" required="true" label="Shift Code"/>
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.shiftCode}" required="true" label="Shift Code"/>
                 <h:outputText value="Doctor ID: " />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.doctorID}" required="true" label="Shift Code"/>
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.doctorID}" required="true" label="Shift Code"/>
             </h:panelGroup>
-            <p:commandButton value="Submit" actionListener="#{schedulingAndResourceAllocationManagedBean.doAssignShift}" update=":form2:growl"/>
-            <h:outputText value="#{schedulingAndResourceAllocationManagedBean.doctorID}"  />
+            <p:commandButton value="Submit" actionListener="#{schedulingAndResourceAllocationManaged.doAssignShift}" update=":form2:growl"/>
+            <h:outputText value="#{schedulingAndResourceAllocationManaged.doctorID}"  />
         </p:panel>
         
     </h:form>
@@ -49,14 +49,14 @@
             <h:panelGroup >
                 <h1> Add Doctor</h1>
                 <h:outputText value="Doctor Name: " />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.doctorName}" required="true" label="Shift Date"/>
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.doctorName}" required="true" label="Shift Date"/>
                 <h:outputText value="Doctor Username: " />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.doctorUsername}" required="true" label="Shift Date"/>
-                <h:outputText value="Doctor DOB: "/>
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.doctorDOB}" required="true" label="Shift Code"/>
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.doctorUsername}" required="true" label="Shift Date"/>
+                <h:outputText value="Doctor DOB: (YYYY-MM-dd)"/>
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.doctorDOB}" required="true" label="Shift Code"/>
             </h:panelGroup>
-            <p:commandButton value="Submit" actionListener="#{schedulingAndResourceAllocationManagedBean.DoAddDoctor}" update=":form3:growl"/>
-            <h:outputText value="#{schedulingAndResourceAllocationManagedBean.doctorUsername}"  />
+            <p:commandButton value="Submit" actionListener="#{schedulingAndResourceAllocationManaged.DoAddDoctor}" update=":form3:growl"/>
+            <h:outputText value="#{schedulingAndResourceAllocationManaged.doctorUsername}"  />
         </p:panel>
         
     </h:form>
@@ -64,12 +64,12 @@
             <p:panel>
                 <h1> Get Available Doctors</h1>
                 <h:outputText value="Appointment Date: " />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.appointmentDate}" required="true" label="Appointment Date"/>
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.appointmentDate}" required="true" label="Appointment Date"/>
                 <h:outputText value="Appointment Time " />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.appointmentTime}" required="true" label="Appointment Time"/>
-                <p:commandButton value="Get Doctors" actionListener="#{schedulingAndResourceAllocationManagedBean.doGetAvailableDoctors}" update=":form4:dataTableAvailableDoctors" />
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.appointmentTime}" required="true" label="Appointment Time"/>
+                <p:commandButton value="Get Doctors" actionListener="#{schedulingAndResourceAllocationManaged.doGetAvailableDoctors}" update=":form4:dataTableAvailableDoctors" />
 
-                <p:dataTable id="dataTableAvailableDoctors" var="doc" value="#{schedulingAndResourceAllocationManagedBean.availableDoctors}">  
+                <p:dataTable id="dataTableAvailableDoctors" var="doc" value="#{schedulingAndResourceAllocationManaged.availableDoctors}">  
                     <p:column headerText="Doctor ID">  
                         <h:outputText value="#{doc.docId}" />  
                     </p:column>  
@@ -88,11 +88,11 @@
             <h:panelGroup >
                 <h1> Get Shifts by Doctor ID</h1>
                 <h:outputText value="Doctor ID: " />
-                <p:inputText value="#{schedulingAndResourceAllocationManagedBean.doctorID}" required="true" label="Doctor ID" />
+                <p:inputText value="#{schedulingAndResourceAllocationManaged.doctorID}" required="true" label="Doctor ID" />
             </h:panelGroup>
-            <p:commandButton value="Get Shifts" actionListener="#{schedulingAndResourceAllocationManagedBean.doGetShiftsByDoctor}" update=":form5:dataTableDoctorShifts" />
+            <p:commandButton value="Get Shifts" actionListener="#{schedulingAndResourceAllocationManaged.doGetShiftsByDoctor}" update=":form5:dataTableDoctorShifts" />
 
-            <p:dataTable id="dataTableDoctorShifts" var="shift" value="#{schedulingAndResourceAllocationManagedBean.shiftsByDoctor}">  
+            <p:dataTable id="dataTableDoctorShifts" var="shift" value="#{schedulingAndResourceAllocationManaged.shiftsByDoctor}">  
                     <p:column headerText="Shift Date">  
                         <h:outputText value="#{shift.shiftDate}" />  
                     </p:column>  
@@ -112,9 +112,9 @@
                 <h1> Get All Shifts</h1>
                 
             </h:panelGroup>
-            <p:commandButton value="Get Shifts" actionListener="#{schedulingAndResourceAllocationManagedBean.doViewShift}" update=":form6:dataTableAllShifts" />
+            <p:commandButton value="Get Shifts" actionListener="#{schedulingAndResourceAllocationManaged.doViewShift}" update=":form6:dataTableAllShifts" />
 
-            <p:dataTable id="dataTableAllShifts" var="shift" value="#{schedulingAndResourceAllocationManagedBean.allShifts}">  
+            <p:dataTable id="dataTableAllShifts" var="shift" value="#{schedulingAndResourceAllocationManaged.allShifts}">  
                     <p:column headerText="Shift Date">  
                         <h:outputText value="#{shift.shiftDate}" />  
                     </p:column>  
@@ -136,7 +136,7 @@
                 <h:outputText value="CIN: " />
                 <p:inputText value="#{administrativeDischargeandBillingManaged.CIN}" required="true" label="CIN" />
             </h:panelGroup>
-            <p:commandButton value="Submit" actionListener="#{administrativeDischargeandBillingManaged.doSetDischargeDate(actionEvent)}" update=":form7:growl"/>
+            <p:commandButton value="Submit" actionListener="#{administrativeDischargeandBillingManaged.doSetDischargeDate}" update=":form7:growl"/>
             <h:outputText value="#{administrativeDischargeandBillingManaged.dischargeDate}"  />
         </p:panel>
         
