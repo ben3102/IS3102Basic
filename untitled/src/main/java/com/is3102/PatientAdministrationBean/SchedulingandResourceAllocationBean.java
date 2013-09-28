@@ -9,6 +9,7 @@ package com.is3102.PatientAdministrationBean;
 import com.is3102.EntityClass.Doctor;
 import com.is3102.EntityClass.Schedule;
 import com.is3102.Exception.ExistException;
+import com.is3102.Interface.SchedulingandResourceAllocationBeanLocal;
 import com.is3102.Interface.SchedulingandResourceAllocationBeanRemote;
 
 import javax.ejb.Stateless;
@@ -28,7 +29,7 @@ import java.util.List;
  * @author Ashish
  */
 @Stateless
-public class SchedulingandResourceAllocationBean implements SchedulingandResourceAllocationBeanRemote {
+public class SchedulingandResourceAllocationBean implements SchedulingandResourceAllocationBeanLocal, SchedulingandResourceAllocationBeanRemote {
 
 
 
@@ -39,8 +40,14 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
     Doctor doctor;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void addDoctor(String name, String username, String dob) throws ExistException {
-
+    public void addDoctor(String name, String username, String dob) throws ExistException, ParseException {
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+             sdf.setLenient(false);   
+                // we will now try to parse the string into date form
+                
+                Date testDate = sdf.parse(dob);
+        
         Query q = em.createQuery("SELECT d FROM doctor d where d.Name=:name");
         q.setParameter("name", name);
         List result;
@@ -77,21 +84,27 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
     }
 
     public List<Doctor> getAvailableDoctors(String appointmentDate, String appointmentTime) throws ExistException, ParseException {
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                
+                // we will now try to parse the string into date form
+                sdf.setLenient(false);
+                Date testDate = sdf.parse(appointmentDate);
         String pattern = "HH:mm";
 
 
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf2 = new SimpleDateFormat(pattern);
 
         String shiftCode=null;
 
-        Date sA = sdf.parse("00:00");
-        Date eA= sdf.parse("07:59");
-        Date sB= sdf.parse("08:00");
-        Date eB= sdf.parse("15:59");
-        Date sC = sdf.parse("16:00");
-        Date eC= sdf.parse("23:59");
+        Date sA = sdf2.parse("00:00");
+        Date eA= sdf2.parse("07:59");
+        Date sB= sdf2.parse("08:00");
+        Date eB= sdf2.parse("15:59");
+        Date sC = sdf2.parse("16:00");
+        Date eC= sdf2.parse("23:59");
 
-        Date appTime = sdf.parse(appointmentTime);
+        Date appTime = sdf2.parse(appointmentTime);
 
 
         if((appTime.compareTo(eA)< 0) && (appTime.compareTo(sA)> 0)){
@@ -173,8 +186,16 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
 
     }
 
-    public void assignShift (Long doctorId, String shiftDate, String shiftCode) throws ExistException {
+    public void assignShift (Long doctorId, String shiftDate, String shiftCode) throws ExistException, ParseException {
 
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                
+                // we will now try to parse the string into date form
+                sdf.setLenient(false);
+                Date testDate = sdf.parse(shiftDate);
+        
+        
         Query q = em.createQuery
                 ("SELECT s FROM Schedule s WHERE s.shiftDate = :shiftDate AND s.shiftCode =:shiftCode");
         q.setParameter("shiftDate", shiftDate);
@@ -219,7 +240,29 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
 
     }
 
-    public void createShift(String shiftDate, String shiftCode) throws ExistException {
+    public void createShift(String shiftDate, String shiftCode) throws ExistException,ParseException{
+        
+        
+        
+        if(shiftCode.compareTo("A")==0){
+            System.out.println("Valid shift A code entered.");
+        }else if(shiftCode.compareTo("B")==0){
+            System.out.println("Valid shift B code entered.");
+        }else if (shiftCode.compareTo("C")==0){
+            System.out.println("Valid shift B code entered.");
+        }else throw new ExistException("INVALID SHIFT CODE: Please Enter A, B, or C");
+        
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                
+                // we will now try to parse the string into date form
+                sdf.setLenient(false);
+                Date testDate = sdf.parse(shiftDate);
+                
+                System.out.println(" Date " + testDate.toString());
+        
+                
+                
         Query q = em.createQuery("SELECT c FROM Schedule c where c.shiftDate=:shiftDate AND c.shiftCode=:shiftCode");
         q.setParameter("shiftDate", shiftDate);
         q.setParameter("shiftCode", shiftCode);
@@ -235,17 +278,26 @@ public class SchedulingandResourceAllocationBean implements SchedulingandResourc
 
     public List<Schedule> viewShifts() throws ExistException {
         Query q = em.createQuery("SELECT c FROM Schedule c");
-        List scheduleList = new ArrayList();
+        List <Schedule> scheduleList = new ArrayList<Schedule>();
         for (Object o: q.getResultList()) {
             Schedule sch = (Schedule)o;
             scheduleList.add(sch);
         }
+        System.out.println("this is it" + scheduleList.size());
         if (scheduleList.isEmpty()==true){
             throw new ExistException("THERE ARE NO SCHEDULES IN THE DATABASE");
         }
-
-
-        return scheduleList;
+        else{
+            Schedule e = (Schedule)scheduleList.get(0);
+            System.out.println(e.getClass());
+        }
+        try{
+            return scheduleList;
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
+        return null;
     }
 
     public void DisplayPatientInfo() throws Exception {

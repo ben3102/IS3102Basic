@@ -8,18 +8,16 @@ package com.is3102.Interface;
 import com.is3102.EntityClass.Doctor;
 import com.is3102.EntityClass.Schedule;
 import com.is3102.Exception.ExistException;
-import java.io.Serializable;
-
-import javax.ejb.Remote;
 import java.text.ParseException;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author Ashish
  */
-@Remote
-public interface SchedulingandResourceAllocationBeanRemote {
+@Local
+public interface SchedulingandResourceAllocationBeanLocal {
     
     public Long getDoctorID(String name) throws ExistException;
 
