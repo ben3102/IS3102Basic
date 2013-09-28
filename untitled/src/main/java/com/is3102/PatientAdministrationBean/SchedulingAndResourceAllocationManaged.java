@@ -8,31 +8,38 @@ package com.is3102.PatientAdministrationBean;
 import com.is3102.EntityClass.Doctor;
 import com.is3102.EntityClass.Schedule;
 import com.is3102.Exception.ExistException;
-import com.is3102.Interface.SchedulingandResourceAllocationBeanRemote;
+import com.is3102.Interface.SchedulingandResourceAllocationBeanLocal;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import java.io.Serializable;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 
+
 @ManagedBean
-@RequestScoped
-public class SchedulingAndResourceAllocationManagedBean implements Serializable {
+@ViewScoped
+public class SchedulingAndResourceAllocationManaged implements Serializable {
 
     @EJB
-    public SchedulingandResourceAllocationBeanRemote sra;
+    private SchedulingandResourceAllocationBeanLocal sra;
     
-    public SchedulingAndResourceAllocationManagedBean() {}
-
+    public SchedulingAndResourceAllocationManaged() {    
+    
+    }
+    
     //list of codes returned for a disease name searched.
 
      List<Doctor> allDoctors;
@@ -61,38 +68,52 @@ public class SchedulingAndResourceAllocationManagedBean implements Serializable 
      String shiftDate;
 
     public void DoGetAllDoctors(ActionEvent actionEvent) throws ExistException {
-      allDoctors  = sra.getDoctors();
+      allDoctors  = getSra().getDoctors();
     }
     
 
-
+    @PostConstruct
+    public void init(){
+       // this.doViewShift();
+    }
+    
     public void DoAddDoctor (ActionEvent actionEvent) {
         FacesContext context = FacesContext.getCurrentInstance();
         try {
-            sra.addDoctor(doctorName, doctorUsername, doctorDOB);
+            try{
+                getSra().addDoctor(doctorName, doctorUsername, doctorDOB);
             context.addMessage(null, new FacesMessage("Doctor created successfully with user name: " + doctorUsername ));
-        } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            }catch (ParseException ex){
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Doctor could not be created!", null));
+            }
+            
+            } catch (ExistException ex) {
+            Logger.getLogger(SchedulingAndResourceAllocationManaged.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
     public void DoGetDoctorName(){
         try {
-            this.setDoctorName(sra.getDoctorName(getDoctorID()));
+            this.setDoctorName(getSra().getDoctorName(getDoctorID()));
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManaged.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void doGetAvailableDoctors(ActionEvent event){
+    public void doGetAvailableDoctors(ActionEvent actionEvent){
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
    //         this.setAvailableDoctors(sra.getAvailableDoctors(getAppointmentDate(), getAppointmentTime()));
-        availableDoctors = sra.getAvailableDoctors(appointmentDate, appointmentTime);
+        availableDoctors = getSra().getAvailableDoctors(appointmentDate, appointmentTime);
+        context.addMessage(null, new FacesMessage("Available doctors fetched successfully"));
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManaged.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Doctors could not be fetched!", null));
+            
         }
     }
     
@@ -100,67 +121,88 @@ public class SchedulingAndResourceAllocationManagedBean implements Serializable 
 
     public void doGetDoctors(){
         try {
-            this.setAllDoctors(sra.getDoctors());
+            this.setAllDoctors(getSra().getDoctors());
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManaged.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void doGetDoctorsByShift(){
-        this.setDoctorsByShift(sra.getDoctors(this.shiftID));
+        this.setDoctorsByShift(getSra().getDoctors(this.shiftID));
 
     }
     
     public void doGetDoctorName(){
        FacesContext context = FacesContext.getCurrentInstance();
         try {
-            doctorName = sra.getDoctorName(doctorID);
+            doctorName = getSra().getDoctorName(doctorID);
          //   context.addMessage(null, new FacesMessage("Shift assigned successfully to doctor ID: " + doctorID ));
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManaged.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
     public void doGetDoctorID(){
        FacesContext context = FacesContext.getCurrentInstance();
         try {
-            doctorID = sra.getDoctorID(doctorName);
+            doctorID = getSra().getDoctorID(doctorName);
             context.addMessage(null, new FacesMessage("ID of "+ doctorName+" is: " + doctorID ));
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManaged.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
 
 
     public void doGetShiftsByDoctor(){
-        this.setShiftsByDoctor(sra.getShifts(this.doctorID));
+        this.setShiftsByDoctor(getSra().getShifts(this.doctorID));
     }
 
     public void doAssignShift(){
         FacesContext context = FacesContext.getCurrentInstance();
         try {
-            sra.assignShift(doctorID, shiftDate, shiftCode);
+            try{
+                getSra().assignShift(doctorID, shiftDate, shiftCode);
             context.addMessage(null, new FacesMessage("Shift assigned successfully to doctor ID: " + doctorID ));
-        } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            }catch (ParseException ex){
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Shift could not be assigned!", null));
+            }
+            
+            } catch (ExistException ex) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Shift could not be assigned!", null));
         }
     }
 
     public void doCreateShift(ActionEvent actionEvent){
         FacesContext context = FacesContext.getCurrentInstance();
         try {
-            sra.createShift(shiftDate, shiftCode);
-            context.addMessage(null, new FacesMessage("Shift created successfully for the following date: " + shiftDate ));
+            try {
+                // declare and initialize testDate variable, this is what will hold
+                // our converted string
+
+                        getSra().createShift(shiftDate, shiftCode);
+                        context.addMessage(null, new FacesMessage("Shift created successfully for the following date: " + shiftDate ));
+            } catch (ParseException ex) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Shift could not be created!", null));
+                
+            }
+            
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Shift could not be created!", null));
+        } 
     }
 
     public void doViewShift(){
         try {
-            this.setAllShifts(sra.viewShifts());
+            List<Schedule> t = new ArrayList<Schedule>();
+            allShifts = getSra().viewShifts();
+            //this.setAllShifts(sra.viewShifts());
+            System.out.println(this.allShifts.size());
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManaged.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -374,6 +416,72 @@ public class SchedulingAndResourceAllocationManagedBean implements Serializable 
     public void setShiftDate(String shiftDate) {
         this.shiftDate = shiftDate;
     }
+    
+    
+    
+    // date validation using SimpleDateFormat
+// it will take a string and make sure it's in the proper 
+// format as defined by you, and it will also make sure that
+// it's a legal date
+
+public boolean isValidDate(String date)
+{
+    // set date format, this can be changed to whatever format
+    // you want, MM-dd-yyyy, MM.dd.yyyy, dd.MM.yyyy etc.
+    // you can read more about it here:
+    // http://java.sun.com/j2se/1.4.2/docs/api/index.html
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    
+    // declare and initialize testDate variable, this is what will hold
+    // our converted string
+    
+    Date testDate = null;
+
+    // we will now try to parse the string into date form
+    try
+    {
+      testDate = sdf.parse(date);
+    }
+
+    // if the format of the string provided doesn't match the format we 
+    // declared in SimpleDateFormat() we will get an exception
+
+    catch (ParseException e)
+    {
+      System.out.println("the date you provided is in an invalid date" +
+                              " format.") ;
+      return false;
+    }
+
+
+    if (!sdf.format(testDate).equals(date)) 
+    {
+      System.out.println("The date that you provided is invalid.");
+      return false;
+    }
+    
+    // if we make it to here without getting an error it is assumed that
+    // the date was a valid one and that it's in the proper format
+
+    return true;
+
+} // end isValidDate
+
+    /**
+     * @return the sra
+     */
+    public SchedulingandResourceAllocationBeanLocal getSra() {
+        return sra;
+    }
+
+    /**
+     * @param sra the sra to set
+     */
+    public void setSra(SchedulingandResourceAllocationBeanLocal sra) {
+        this.sra = sra;
+    }
+
 
 }
 
