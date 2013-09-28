@@ -10,57 +10,69 @@ import com.is3102.EntityClass.Schedule;
 import com.is3102.Exception.ExistException;
 import com.is3102.Interface.SchedulingandResourceAllocationBeanRemote;
 
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.ManagedBean;
-import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 
 @ManagedBean
-@SessionScoped
-public class SchedulingandResourceAllocationManagedBean implements Serializable {
+@RequestScoped
+public class SchedulingAndResourceAllocationManagedBean implements Serializable {
 
     @EJB
-    private static SchedulingandResourceAllocationBeanRemote sra;
-
+    public SchedulingandResourceAllocationBeanRemote sra;
+    
+    public SchedulingAndResourceAllocationManagedBean() {}
 
     //list of codes returned for a disease name searched.
-    private List<Doctor> allDoctors;
+
+     List<Doctor> allDoctors;
     //caseId to search a particular case.
-    private String doctorName;
+
+     String doctorName;
+
     //ICD10 code entitiy for creating a new case.
-    private List<Doctor> availableDoctors;
+     List<Doctor> availableDoctors;
     //diagnosis description entered by doctor when adding a new diagnosis for a case.
-    private List<Schedule> allShifts;
+     List<Schedule> allShifts;
     //disease description entered by doctor used to search ICD10 code
-    private List<Schedule> doctorShifts;
+     List<Schedule> doctorShifts;
     //collectin of all Diagnosis objects for a particular case.
-    private String doctorUsername;
-    private String doctorDOB;
-    private Long doctorID;
-    private String appointmentTime;
-    private String appointmentDate;
-    private Long shiftID;
-    private List<Doctor> doctorsByShift;
-    private List<Schedule> shiftsByDoctor;
-    private String shiftCode;
-    private String shiftDate;
+     String doctorUsername;
+     String doctorDOB;
+     Long doctorID;
+     String appointmentTime;
+     String appointmentDate;
+     Long shiftID;
+     List<Doctor> doctorsByShift;
+     List<Schedule> shiftsByDoctor;
+    @ManagedProperty(value="#{shiftCode}")
+     String shiftCode;
+    @ManagedProperty(value="#{shiftDate}")
+     String shiftDate;
 
-    public void DoGetAllDoctors() throws ExistException{
-        List<Doctor> result = sra.getDoctors();
-        this.setAllDoctors(result);
-
+    public void DoGetAllDoctors(ActionEvent actionEvent) throws ExistException {
+      allDoctors  = sra.getDoctors();
     }
+    
 
-    public void DoAddDoctor () {
+
+    public void DoAddDoctor (ActionEvent actionEvent) {
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
-            sra.addDoctor(doctorName, getDoctorUsername(), getDoctorDOB());
+            sra.addDoctor(doctorName, doctorUsername, doctorDOB);
+            context.addMessage(null, new FacesMessage("Doctor created successfully with user name: " + doctorUsername ));
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingandResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -69,31 +81,54 @@ public class SchedulingandResourceAllocationManagedBean implements Serializable 
         try {
             this.setDoctorName(sra.getDoctorName(getDoctorID()));
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingandResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void doGetAvailableDoctors(){
+    public void doGetAvailableDoctors(ActionEvent event){
         try {
-            this.setAvailableDoctors(sra.getAvailableDoctors(getAppointmentDate(), getAppointmentTime()));
+   //         this.setAvailableDoctors(sra.getAvailableDoctors(getAppointmentDate(), getAppointmentTime()));
+        availableDoctors = sra.getAvailableDoctors(appointmentDate, appointmentTime);
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingandResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
-            Logger.getLogger(SchedulingandResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+
 
     public void doGetDoctors(){
         try {
             this.setAllDoctors(sra.getDoctors());
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingandResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void doGetDoctorsByShift(){
         this.setDoctorsByShift(sra.getDoctors(this.shiftID));
 
+    }
+    
+    public void doGetDoctorName(){
+       FacesContext context = FacesContext.getCurrentInstance();
+        try {
+            doctorName = sra.getDoctorName(doctorID);
+         //   context.addMessage(null, new FacesMessage("Shift assigned successfully to doctor ID: " + doctorID ));
+        } catch (ExistException ex) {
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    public void doGetDoctorID(){
+       FacesContext context = FacesContext.getCurrentInstance();
+        try {
+            doctorID = sra.getDoctorID(doctorName);
+            context.addMessage(null, new FacesMessage("ID of "+ doctorName+" is: " + doctorID ));
+        } catch (ExistException ex) {
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
 
 
@@ -102,18 +137,22 @@ public class SchedulingandResourceAllocationManagedBean implements Serializable 
     }
 
     public void doAssignShift(){
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
-            sra.assignShift(this.doctorID, this.getShiftDate(), this.getShiftCode());
+            sra.assignShift(doctorID, shiftDate, shiftCode);
+            context.addMessage(null, new FacesMessage("Shift assigned successfully to doctor ID: " + doctorID ));
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingandResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void doCreateShift(){
+    public void doCreateShift(ActionEvent actionEvent){
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
-            sra.createShift(this.getShiftDate(), this.getShiftCode());
+            sra.createShift(shiftDate, shiftCode);
+            context.addMessage(null, new FacesMessage("Shift created successfully for the following date: " + shiftDate ));
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingandResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -121,7 +160,7 @@ public class SchedulingandResourceAllocationManagedBean implements Serializable 
         try {
             this.setAllShifts(sra.viewShifts());
         } catch (ExistException ex) {
-            Logger.getLogger(SchedulingandResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchedulingAndResourceAllocationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

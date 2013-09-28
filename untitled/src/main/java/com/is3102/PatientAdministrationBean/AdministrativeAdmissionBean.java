@@ -85,10 +85,10 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public long createCase(String bedNo, String appId) throws ExistException {
-        //throws ExistException {
-        System.out.println("Test3");
         mCase mcase;
         Appointment appointment = em.find(Appointment.class, new Long(appId));
+        if(appointment==null)
+            throw new ExistException("CASE DOES NOT EXIST");
         mcase = appointment.getmCase();
         Date dateAdmitted = new Date();
         mcase.create(dateAdmitted);
@@ -160,7 +160,6 @@ public class AdministrativeAdmissionBean implements AdministrativeAdmissionRemot
 
     /* public void UpdatePatientInfo() throws Exception {
      } */
-    
     public Doctor getDoctor(Long docId) {
         return em.find(Doctor.class, docId);
     }

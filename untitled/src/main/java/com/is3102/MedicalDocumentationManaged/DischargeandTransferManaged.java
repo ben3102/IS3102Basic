@@ -18,7 +18,7 @@ import java.util.List;
  * @author Ben
  */
 @ManagedBean
-public class DischargeAndTransferManaged {
+public class DischargeandTransferManaged {
   @EJB
   private DischargeAndTransferBean1Remote dt;
   

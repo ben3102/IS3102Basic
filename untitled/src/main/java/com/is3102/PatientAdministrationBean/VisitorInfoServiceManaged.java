@@ -1,7 +1,7 @@
 package com.is3102.PatientAdministrationBean;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import com.is3102.EntityClass.Bed;
 import com.is3102.EntityClass.Patient;
@@ -19,7 +19,7 @@ import javax.faces.event.ActionEvent;
  * @author Swarit
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 //@RequestScoped
 public class VisitorInfoServiceManaged implements Serializable {
 
@@ -77,13 +77,6 @@ public class VisitorInfoServiceManaged implements Serializable {
             //context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Patient Record could not be found!", null));
 
         }
-        //context.addMessage(null, new FacesMessage("Bed Number: " + bed.getBedNo() + " ; " + " Room Number: " + bed.getRoomNo() + " ; " + " Floor Number: " + bed.getFloor()));
-        //} catch (Exception ex) {
-        //  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, ex.getMessage(), null));
-        //context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Patient Record could not be found!", null));
-        //} finally {
-        //clear1();
-        //}
     }
 
     /* Count the number of patients admitted today */
